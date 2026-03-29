@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalle del Producto</title>
+    <style>
+        body
+        {
+            text-align: center;
+            font-size: 25px;
+        }
+        button {
+            padding: 8px 16px;
+            font-size: 25px;
+            border-radius: 7px;
+        }
+        button:hover {
+            opacity: 0.8;
+            cursor: pointer;
+        }
+        .detalle-contenedor {
+            display: inline-block;
+            text-align: left;
+            max-width: 500px;
+            width: 100%;
+            margin: 0 auto;
+        }
+        p {
+            border-bottom: 1px solid rgb(133, 133, 133);
+            border-radius: 8px;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Detalle del Producto</h1>
+    <div class="detalle-contenedor">
+        <p><strong>Nombre:</strong> {{ producto.nombre }}</p>
+        <p><strong>Categoria:</strong> {{ producto.categoria }}</p>
+        <p><strong>Proveedor:</strong> {{ producto.proveedor }}</p>
+        <p><strong>Descripción:</strong> {{ producto.descripcion }}</p>
+        <p><strong>Precio:</strong> $ {{ producto.precio }}</p>
+        <p><strong>Stock:</strong> {{ producto.stock }}</p>
+        <button style="background-color: rgb(0, 102, 255); color: #fff;">Editar</button>
+    </div>
+</body>
+</html>
