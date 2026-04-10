@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Productos</title>
+    <style>
+        body { 
+            font-size: 25px;
+            text-align: center;
+        }
+        table {
+            margin-left: auto;
+            margin-right: auto;
+            border-collapse: collapse;
+            border: 1px solid #000000;
+        }
+        th, td {
+            padding: 8px 16px;
+            border: 1px solid #000000;
+        }
+        button {
+            padding: 8px 16px;
+            font-size: 25px;
+            border-radius: 7px;
+        }
+        button:hover {
+            opacity: 0.8;
+            cursor: pointer;
+        }
+        th {
+            background-color: rgb(168, 208, 255);
+            color: #000000;
+        }
+    </style>
+</head>
+<body>
+<h1>{{ titulo }}</h1>
+    <div style="margin-bottom: 10px;">
+        <div>
+            <button style="background-color: rgb(255, 92, 92);">PDF</button>
+            <button style="background-color: rgb(53, 255, 70);">Añadir</button>
+            <button style="background-color: rgb(255, 189, 102);">Filtrar</button>
+            <button style="background-color: rgb(102, 178, 255);">Actualizar</button>
+        </div>
+    </div>
+    <div style="display: inline-block; margin-left: auto; margin-right: auto;">
+        <table>
+            <tr>
+                <th>Nombre</th>
+                <th>Categoria</th>
+                <th>Proveedor</th>
+                <th>Descripción</th>
+                <th>Precio</th>
+                <th>Stock</th>
+                <th>Editar producto</th>
+            </tr>
+            {% for pet in Productos %}
+            <tr>
+                <td>{{pet.nombre}}</td>
+                <td>{{pet.categoria}}</td>
+                <td>{{pet.proveedor}}</td>
+                <td>{{pet.descripcion}}</td>
+                <td>$ {{pet.precio}}</td>
+                {% if pet.stock > 10 %}
+                    <td>{{pet.stock}}</td>
+                {% else %}
+                    <td style="font-weight: bold; color: rgb(255, 92, 92);">{{pet.stock}}</td>
+                {% endif %}
+                <td><a href="{% url 'inventario:detalle_producto' pet.id %}">Editar</a></td>
+            </tr>
+            {% endfor %}
+        </table>
+        <p style="font-size: 30px; text-align: left;"><strong>Catidad total de productos: {{ Total }}</strong></p>
+    </div>
+</body>
+</html>

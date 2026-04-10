@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Categorías</title>
+    <style>
+        body { 
+            font-size: 25px;
+            text-align: center;
+        }
+        table {
+            margin-left: auto;
+            margin-right: auto;
+            border-collapse: collapse;
+            border: 1px solid #000000;
+        }
+        th, td {
+            padding: 8px 16px;
+            border: 1px solid #000000;
+        }
+        button {
+            padding: 8px 16px;
+            font-size: 25px;
+            border-radius: 7px;
+        }
+        button:hover {
+            opacity: 0.8;
+            cursor: pointer;
+        }
+        th {
+            background-color: rgb(168, 208, 255);
+            color: #000000;
+        }
+    </style>
+</head>
+<body>
+<h1>Categorías</h1>
+    <div style="margin-bottom: 10px;">
+        <div>
+            <button style="background-color: rgb(53, 255, 70);">Añadir</button>
+        </div>
+    </div>
+    <div style="display: inline-block; margin-left: auto; margin-right: auto;">
+        <table>
+            <tr>
+                <th>Nombre</th>
+                <th>Descripción</th>
+                <th>Editar categoría</th>
+            </tr>
+            {% for cat in Categorias %}
+            <tr>
+                <td>{{ cat.nombre }}</td>
+                <td>{{ cat.descripcion }}</td>
+                <td><button style="background-color: rgb(0, 102, 255); color: #fff;">Editar</button></td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+</body>
+</html>
