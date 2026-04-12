@@ -1,0 +1,48 @@
+# Entornos virtuales
+env/
+venv/
+
+# Bytecode de Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyo
+
+# Base de datos SQLite
+db.sqlite3
+db.sqlite3-journal
+
+# Archivos de medios subidos por usuarios
+media/
+
+# IDE y editores
+.vs/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Sistema operativo
+Thumbs.db
+Desktop.ini
+.DS_Store
+
+# Variables de entorno
+.env
+*.env
+
+# Archivos de distribución y empaquetado
+dist/
+build/
+*.egg-info/
+*.egg
+
+# Archivos estáticos recolectados
+staticfiles/
+static_root/
+
+# Logs
+*.log
+
+# init (carpeta auxiliar de compilación)
+init/
