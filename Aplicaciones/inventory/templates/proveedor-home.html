@@ -4,10 +4,10 @@
     <h1>Proveedores registrados</h1>
     <div style="margin-bottom: 10px;">
         <div>
-            <button style="background-color: rgb(255, 92, 92);">PDF</button>
-            <a href="{% url 'inventario:crear_proveedor' %}"><button style="background-color: rgb(53, 255, 70);">Añadir</button></a>
-            <a href="{% url 'inventario:listado_categorias' %}"><button style="background-color: rgb(255, 189, 102);">Revisar categorías</button></a>
-            <a href="{% url 'inventario:listado_productos' %}"><button style="background-color: rgb(102, 178, 255);">Volver a listado de productos</button></a>
+            <button style="background-color: rgb(20, 97, 5); color: white;">PDF</button>
+            <a href="{% url 'inventario:crear_proveedor' %}"><button style="background-color: rgb(20, 97, 5); color: white;">Añadir</button></a>
+            <a href="{% url 'inventario:listado_categorias' %}"><button style="background-color: rgb(20, 97, 5); color: white;">Revisar categorías</button></a>
+            <a href="{% url 'inventario:listado_productos' %}"><button style="background-color: rgb(20, 97, 5); color: white;">Volver a listado de productos</button></a>
         </div>
     </div>
     <div style="display: inline-block; margin-left: auto; margin-right: auto;">
@@ -27,7 +27,7 @@
                 <td>{{ prov.telefono }}</td>
                 <td>{{ prov.email }}</td>
                 <td>{{ prov.direccion }}</td>
-                <td><a href="{% url 'inventario:editar_proveedor' prov.id %}"><button style="background-color: rgb(0, 102, 255); color: #fff;">Editar</button></a></td>
+                <td><a href="{% url 'inventario:editar_proveedor' prov.id %}"><button style="background-color: rgb(20, 97, 5); color: #fff;">Editar</button></a></td>
             </tr>
             {% endfor %}
         </table>

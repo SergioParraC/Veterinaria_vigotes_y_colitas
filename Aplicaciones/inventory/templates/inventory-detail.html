@@ -3,7 +3,7 @@
 {% block content %}
 
     <h1>{{ titulo }}</h1>
-    <a href="{% url 'inventario:listado_productos' %}"><button type="button" style="background-color: rgb(255, 251, 38); color: black; margin-bottom: 10px;">Volver a productos</button></a>
+    <a href="{% url 'inventario:listado_productos' %}"><button type="button" style="background-color: rgb(20, 97, 5); color: white; margin-bottom: 10px;">Volver a productos</button></a>
     
     <div class="form-container">
         <form method="POST" enctype="multipart/form-data">
@@ -35,12 +35,12 @@
             {% if producto.img %}
                 <img src="{{ producto.img.url }}" alt="Imagen del producto" width="200">
             {% endif %}
-            <button type="submit" style="background-color: rgb(0, 102, 255); color: white;">{{ boton }}</button>
+            <button type="submit" style="background-color: rgb(20, 97, 5); color: white;">{{ boton }}</button>
         </form>
         {% if producto.id %}
         <form method="POST" action="{% url 'inventario:eliminar_producto' producto.id %}" style="align-items: center;" onsubmit="return confirmarEliminacion();">
             {% csrf_token %}
-            <button type="submit" style="background-color: rgb(255, 38, 38); color: white;">Eliminar producto</button>
+            <button type="submit" style="background-color: rgb(20, 97, 5); color: white;">Eliminar producto</button>
         </form>
     {% endif %}
     </div>
