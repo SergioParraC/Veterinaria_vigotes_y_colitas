@@ -1,0 +1,29 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+
+    <h1>{{ titulo }}</h1>
+    <a href="{% url 'inventario:listado_categorias' %}"><button style="background-color: rgb(20, 97, 5); margin-bottom: 10px; color: white;">Volver a Categorías</button></a>
+    <div class="form-container">
+        <form method="POST">
+        {% csrf_token %}
+        <label for="nombre">Nombre:</label>
+        <input type="text" id="nombre" name="Nombre" placeholder="Nombre" value="{{ categoria.nombre }}" required>
+        <label for="descripcion">Descripción (opcional):</label>
+        <textarea id="descripcion" name="Descripcion" placeholder="Descripción (opcional)">{{ categoria.descripcion }}</textarea>
+        <button type="submit" style="background-color: rgb(20, 97, 5); color: white;">{{ boton }}</button>
+    </form>
+    </div>
+    <br>
+    {% if mensaje %}
+        <p style="color: green; font-size: 20px;">{{ mensaje }}</p>
+    {% endif %}
+    {% if messages %}
+        {% for message in messages %}
+            <div style="color: {% if message.tags == 'success' %}green{% else %}red{% endif %}; font-size: 20px; margin-bottom: 10px;">
+            {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+{% endblock %}

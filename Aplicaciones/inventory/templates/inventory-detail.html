@@ -1,48 +1,59 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Detalle del Producto</title>
-    <style>
-        body
-        {
-            text-align: center;
-            font-size: 25px;
-        }
-        button {
-            padding: 8px 16px;
-            font-size: 25px;
-            border-radius: 7px;
-        }
-        button:hover {
-            opacity: 0.8;
-            cursor: pointer;
-        }
-        .detalle-contenedor {
-            display: inline-block;
-            text-align: left;
-            max-width: 500px;
-            width: 100%;
-            margin: 0 auto;
-        }
-        p {
-            border-bottom: 1px solid rgb(133, 133, 133);
-            border-radius: 8px;
-            padding: 10px;
-        }
-    </style>
-</head>
-<body>
-    <h1>Detalle del Producto</h1>
-    <div class="detalle-contenedor">
-        <p><strong>Nombre:</strong> {{ producto.nombre }}</p>
-        <p><strong>Categoria:</strong> {{ producto.categoria }}</p>
-        <p><strong>Proveedor:</strong> {{ producto.proveedor }}</p>
-        <p><strong>Descripción:</strong> {{ producto.descripcion }}</p>
-        <p><strong>Precio:</strong> $ {{ producto.precio }}</p>
-        <p><strong>Stock:</strong> {{ producto.stock }}</p>
-        <button style="background-color: rgb(0, 102, 255); color: #fff;">Editar</button>
+{% extends 'base/base.html' %}
+
+{% block content %}
+
+    <h1>{{ titulo }}</h1>
+    <a href="{% url 'inventario:listado_productos' %}"><button type="button" style="background-color: rgb(20, 97, 5); color: white; margin-bottom: 10px;">Volver a productos</button></a>
+    
+    <div class="form-container">
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <label for="nombre">Nombre:</label>
+            <input type="text" id="nombre" name="Nombre" placeholder="Nombre" value="{{ producto.nombre }}" required>
+            <label for="categoria">Categoría:</label>
+            <select id="categoria" name="Categoria">
+                <option value="">Seleccione una categoria</option>
+                {% for cat in categorias %}
+                    <option value="{{ cat.id }}" {% if cat.id == producto.categoria.id %}selected{% endif %}>{{ cat.descripcion }}</option>
+                {% endfor %}
+            </select>
+            <label for="proveedor">Proveedor:</label>
+            <select id="proveedor" name="Proveedor">
+                <option value="">Seleccione un proveedor</option>
+                {% for prov in proveedores %}
+                    <option value="{{ prov.id }}" {% if prov.id == producto.proveedor.id %}selected{% endif %}>{{ prov.nombre }}</option>
+                {% endfor %}
+            </select>
+            <label for="descripcion">Descripción:</label>
+            <input type="text" id="descripcion" name="Descripcion" placeholder="Descripcion" value="{{ producto.descripcion }}" required>
+            <label for="precio">Precio:</label>
+            <input type="text" id="precio" name="Precio" placeholder="Precio" value="{{ producto.precio }}" required>
+            <label for="stock">Stock:</label>
+            <input type="number" id="stock" name="Stock" placeholder="Stock" value="{{ producto.stock }}" step="1" required>
+            <label for="imagen">Imagen:</label>
+            <input type="file" id="imagen" name="Imagen" {% if not producto.img %}required{% endif %}>
+            {% if producto.img %}
+                <img src="{{ producto.img.url }}" alt="Imagen del producto" width="200">
+            {% endif %}
+            <button type="submit" style="background-color: rgb(20, 97, 5); color: white;">{{ boton }}</button>
+        </form>
+        {% if producto.id %}
+        <form method="POST" action="{% url 'inventario:eliminar_producto' producto.id %}" style="align-items: center;" onsubmit="return confirmarEliminacion();">
+            {% csrf_token %}
+            <button type="submit" style="background-color: rgb(20, 97, 5); color: white;">Eliminar producto</button>
+        </form>
+    {% endif %}
     </div>
-</body>
-</html>
+    <br>
+    
+    {% if mensaje %}
+        <p style="color: green; font-size: 20px;">{{ mensaje }}</p>
+    {% endif %}
+
+    <script>
+        function confirmarEliminacion() {
+            return confirm('¿Seguro que quieres eliminar el producto {{ producto.nombre }}?');
+        }
+    </script>
+
+{% endblock %}

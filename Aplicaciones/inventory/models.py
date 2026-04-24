@@ -20,7 +20,7 @@ class Proveedor(models.Model):
         return self.nombre
     
 class Producto(models.Model):
-    nombre = models.CharField(max_length=100, unique=True, verbose_name='Nombre del producto')
+    nombre = models.CharField(max_length=100, verbose_name='Nombre del producto')
     categoria = models.ForeignKey(Categoria, on_delete=models.CASCADE, related_name='productos')
     proveedor = models.ForeignKey(Proveedor, on_delete=models.CASCADE, related_name='productos')
     descripcion = models.TextField(max_length=250, blank=True, null=True, verbose_name='Descripción')
