@@ -24,7 +24,7 @@ python -m pip install -r requirements.txt
 NOTA: Si ya tienes el entorno virtual, inicialo con este comando:
 
 ```powershell
-.\env\Scripts\Activate.ps1
+.\env\Scripts\Activate
 ```
 
 #### 1) Ubícate en la carpeta del proyecto, desde el explorador de archivos
@@ -40,14 +40,14 @@ python -m venv env
 #### 4) Activa el entorno virtual:
 
 ```powershell
-.\env\Scripts\Activate.ps1
+.\env\Scripts\Activate
 ```
 
 #### 5) Si PowerShell bloquea scripts, habilita solo la sesión actual y vuelve a activar:
 
 ```powershell
 Set-ExecutionPolicy -Scope Process -ExecutionPolicy RemoteSigned
-.\env\Scripts\Activate.ps1
+.\env\Scripts\Activate
 ```
 
 #### 6) Instala dependencias:
