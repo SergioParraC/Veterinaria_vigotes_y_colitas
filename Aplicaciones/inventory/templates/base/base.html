@@ -43,16 +43,20 @@
             background-color: #acffaf;
             color: #000000;
         }
-        .form-container {
+        .form-container,
+        .form-delete {
             display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: flex-start;
+            justify-content: center;
+            width: 100%;
         }
+
         form {
             display: flex;
             flex-direction: column;
             gap: 8px;
+        }
+
+        .form-container form {
             background: #cfffd181;
             padding: 32px 32px 24px 32px;
             border-radius: 12px;
@@ -60,6 +64,47 @@
             min-width: 350px;
             max-width: 400px;
         }
+
+        .form-delete form {
+            background: transparent;
+            padding: 0;
+            box-shadow: none;
+            min-width: auto;
+            max-width: none;
+            width: auto;
+        }
+        .search-wrap { 
+            width: 100%; 
+            padding: 0 24px; 
+            box-sizing: border-box; 
+        }
+
+        .search-form { 
+            display: grid; 
+            grid-template-columns: repeat(5, minmax(200px, 1fr)); 
+            gap: 12px; 
+            width: 100%; 
+            max-width: 1200px; 
+            margin: 0 auto; 
+            background: transparent; 
+            box-shadow: none; 
+            padding: 0; 
+            align-items: end;
+        }
+
+        .search-form .f { 
+            display: flex; 
+            flex-direction: column; 
+            gap: 6px; 
+        }
+
+        .search-form button { 
+            grid-column: 5 / 6; 
+            justify-self: stretch;
+            align-self: end;
+            margin-top: 0;
+        }
+
         input, select, textarea {
             font-size: 20px;
             padding: 8px 12px;
@@ -77,6 +122,8 @@
             border-radius: 7px;
             border: none;
             margin-top: 10px;
+            background-color: rgb(20, 97, 5);
+            color: white;
         }
         button:hover {
             opacity: 0.8;
