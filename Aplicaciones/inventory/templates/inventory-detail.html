@@ -3,51 +3,48 @@
 {% block content %}
 
     <h1>{{ titulo }}</h1>
-    <a href="{% url 'inventario:listado_productos' %}"><button type="button" style="background-color: rgb(20, 97, 5); color: white; margin-bottom: 10px;">Volver a productos</button></a>
-    
-    <div class="form-container">
-        <form method="POST" enctype="multipart/form-data">
-            {% csrf_token %}
-            <label for="nombre">Nombre:</label>
-            <input type="text" id="nombre" name="Nombre" placeholder="Nombre" value="{{ producto.nombre }}" required>
-            <label for="categoria">Categoría:</label>
-            <select id="categoria" name="Categoria">
-                <option value="">Seleccione una categoria</option>
-                {% for cat in categorias %}
-                    <option value="{{ cat.id }}" {% if cat.id == producto.categoria.id %}selected{% endif %}>{{ cat.descripcion }}</option>
-                {% endfor %}
-            </select>
-            <label for="proveedor">Proveedor:</label>
-            <select id="proveedor" name="Proveedor">
-                <option value="">Seleccione un proveedor</option>
-                {% for prov in proveedores %}
-                    <option value="{{ prov.id }}" {% if prov.id == producto.proveedor.id %}selected{% endif %}>{{ prov.nombre }}</option>
-                {% endfor %}
-            </select>
-            <label for="descripcion">Descripción:</label>
-            <input type="text" id="descripcion" name="Descripcion" placeholder="Descripcion" value="{{ producto.descripcion }}" required>
-            <label for="precio">Precio:</label>
-            <input type="text" id="precio" name="Precio" placeholder="Precio" value="{{ producto.precio }}" required>
-            <label for="stock">Stock:</label>
-            <input type="number" id="stock" name="Stock" placeholder="Stock" value="{{ producto.stock }}" step="1" required>
-            <label for="imagen">Imagen:</label>
-            <input type="file" id="imagen" name="Imagen" {% if not producto.img %}required{% endif %}>
-            {% if producto.img %}
-                <img src="{{ producto.img.url }}" alt="Imagen del producto" width="200">
-            {% endif %}
-            <button type="submit" style="background-color: rgb(20, 97, 5); color: white;">{{ boton }}</button>
-        </form>
-        {% if producto.id %}
-        <form method="POST" action="{% url 'inventario:eliminar_producto' producto.id %}" style="align-items: center;" onsubmit="return confirmarEliminacion();">
-            {% csrf_token %}
-            <button type="submit" style="background-color: rgb(20, 97, 5); color: white;">Eliminar producto</button>
-        </form>
-    {% endif %}
-    </div>
-    <br>
-    
     {% if mensaje %}
         <p style="color: green; font-size: 20px;">{{ mensaje }}</p>
+    {% endif %}
+    <a href="{% url 'inventario:listado_productos' %}"><button type="button"; style = "margin-bottom: 10px;">Volver a productos</button></a>
+    
+    <div class="form-container">
+        {% if producto and producto.id %}
+            <form method="POST" action="{% url 'inventario:guardar_producto' producto.id %}">
+        {% else %}
+            <form method="POST" action="{% url 'inventario:crear_producto_formulario' %}">
+        {% endif %}
+            {% csrf_token %}
+            <label>{{ formulario.nombre.label }}:</label>
+            {{ formulario.nombre }}
+            <label>{{ formulario.categoria.label }}:</label>
+            {{ formulario.categoria }}
+            <label>{{ formulario.proveedor.label }}:</label>
+            {{ formulario.proveedor }}
+            <label>{{ formulario.descripcion.label }}:</label>
+            {{ formulario.descripcion }}
+            <label>{{ formulario.precio.label }}:</label>
+            {{ formulario.precio }}
+            <label>{{ formulario.cantidad_en_stock.label }}:</label>
+            {{ formulario.cantidad_en_stock }}
+            <label>{{ formulario.imagen.label }}:</label>
+            {% if producto and producto.img %}
+                <img src="{{ producto.img.url }}" alt="Imagen del producto" width="200">
+            {% else %}
+                {{ formulario.imagen }}
+            {% endif %}
+            <button type="submit">{{ boton }}</button>
+        </form>
+    </div>
+    <br>
+
+    {% if producto and producto.id %}
+        <div class="form-delete"> 
+            <form method="post" action="{% url 'inventario:eliminar_producto' producto.id %}" onsubmit="return confirmarEliminacion();"> 
+                {% csrf_token %} 
+                <button type="submit" style="background-color:#b91c1c; color:white;">Eliminar producto</button> 
+            </form> 
+        </div>
     {% endif %}
 
     <script>

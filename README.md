@@ -120,9 +120,9 @@ git checkout -b nombre_de_tu_rama
 #### 3) Añade tus cambios y valida que se hayan subido todos tus cambios.
 
 ```bash
-git add .
 git status
 git add .
+git status
 ```
 
 #### 4) Crea el commit y sube tus cambios al repositorio remoto.
