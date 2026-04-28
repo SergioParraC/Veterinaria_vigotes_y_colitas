@@ -7,4 +7,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('Aplicaciones.home.urls')),
     path('inventario/', include(('Aplicaciones.inventory.urls', 'inventario'), namespace='inventario')),
+    path('citas/', include(('Aplicaciones.veterinary.urls', 'citas'), namespace='citas')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -1,0 +1,37 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+
+    <h1>Buscar Citas</h1>
+    <a href="{% url 'citas:listado_citas' %}"><button type="button" style="background-color: rgb(20, 97, 5); color: white; margin-bottom: 10px;">Volver a citas</button></a>
+    
+    <div class="form-container">
+        <form method="GET" action="{% url 'citas:filtrar_citas' %}">
+            <label for="nombre">Nombre de la Mascota:</label>
+            <input type="text" id="nombre" name="nombre" placeholder="Buscar por nombre de mascota">
+            
+            <label for="tipo">Tipo de Cita:</label>
+            <select id="tipo" name="tipo">
+                <option value="">Todos los tipos</option>
+                <option value="Consulta">Consulta General</option>
+                <option value="Vacunación">Vacunación</option>
+                <option value="Cirugía">Cirugía</option>
+                <option value="Peluqueria">Peluqueria</option>
+                <option value="Control">Control</option>
+                <option value="Emergencia">Emergencia</option>
+            </select>
+            
+            <label for="estado">Estado:</label>
+            <select id="estado" name="estado">
+                <option value="">Todos los estados</option>
+                <option value="Pendiente">Pendiente</option>
+                <option value="Confirmada">Confirmada</option>
+                <option value="Completada">Completada</option>
+                <option value="Cancelada">Cancelada</option>
+            </select>
+            
+            <button type="submit" style="background-color: rgb(20, 97, 5); color: white;">Buscar</button>
+        </form>
+    </div>
+
+{% endblock %}

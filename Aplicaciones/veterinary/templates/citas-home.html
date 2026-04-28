@@ -1,0 +1,48 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+
+    <h1>{{ titulo }}</h1>
+    {% if messages %}
+        {% for message in messages %}
+            <div style="color: {{ message.tags|yesno:'green,red' }}; font-size: 20px; margin-bottom: 10px;">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <div style="margin-bottom: 10px;">
+            <a href="{% url 'citas:crear_cita' %}"><button style="background-color: rgb(20, 97, 5); color: white;">Añadir</button></a>
+            <a href="{% url 'citas:buscar_cita' %}"><button style="background-color: rgb(20, 97, 5); color: white;">Filtrar</button></a>
+    </div>
+    <div style="display: inline-block; margin-left: auto; margin-right: auto;">
+        <table>
+            <tr>
+                <th>Mascota</th>
+                <th>Dueño</th>
+                <th>Teléfono</th>
+                <th>Email</th>
+                <th>Tipo</th>
+                <th>Fecha</th>
+                <th>Hora</th>
+                <th>Estado</th>
+                <th>Editar</th>
+            </tr>
+            {% for c in Citas %}
+            <tr>
+                <td>{{c.nombre_mascota}}</td>
+                <td>{{c.dueño_mascota}}</td>
+                <td>{{c.dueño_telefono}}</td>
+                <td>{{c.dueño_email}}</td>
+                <td>{{c.get_tipo_display}}</td>
+                <td>{{c.fecha_cita|date:"d/m/Y"}}</td>
+                <td>{{c.hora_cita|time:"H:i"}}</td>
+                <td>{{c.estado}}</td>
+                <td><a href="{% url 'citas:detalle_cita' c.id %}"><button style="background-color: rgb(20, 97, 5); color: #fff;">Editar</button></a></td>
+            </tr>
+            {% endfor %}
+        </table>
+        <p style="font-size: 30px; text-align: left;"><strong>Total de citas: {{ Total }}</strong></p>
+    </div>
+
+{% endblock %}
