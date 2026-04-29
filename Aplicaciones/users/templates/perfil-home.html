@@ -1,0 +1,34 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+
+    <h1>Perfiles registrados</h1>
+    <div style="margin-bottom: 10px;">
+        <a href="{% url 'users:pdf_perfiles' %}"><button style="background-color: rgb(20, 97, 5); color: white;">PDF</button></a>
+        <a href="{% url 'users:crear_perfil' %}"><button style="background-color: rgb(20, 97, 5); color: white;">Añadir</button></a>
+        <a href="{% url 'users:listado_usuarios' %}"><button style="background-color: rgb(20, 97, 5); color: white;">Ir a usuarios</button></a>
+        <a href="{% url 'users:listado_cuentas' %}"><button style="background-color: rgb(20, 97, 5); color: white;">Ir a cuentas</button></a>
+    </div>
+    <div style="display: inline-block; margin-left: auto; margin-right: auto;">
+        <table>
+            <tr>
+                <th>Nombre</th>
+                <th>Email</th>
+                <th>Teléfono</th>
+                <th>Dirección</th>
+                <th>Editar perfil</th>
+            </tr>
+            {% for p in Perfiles %}
+            <tr>
+                <td>{{ p.nombre }}</td>
+                <td>{{ p.email }}</td>
+                <td>{{ p.telefono|default:'-' }}</td>
+                <td>{{ p.direccion|default:'-' }}</td>
+                <td><a href="{% url 'users:editar_perfil' p.id %}"><button style="background-color: rgb(20, 97, 5); color: #fff;">Editar</button></a></td>
+            </tr>
+            {% endfor %}
+        </table>
+        <p style="font-size: 30px; text-align: left;"><strong>Cantidad total de perfiles: {{ Total }}</strong></p>
+    </div>
+
+{% endblock %}

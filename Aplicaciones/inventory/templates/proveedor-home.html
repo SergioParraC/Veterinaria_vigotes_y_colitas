@@ -4,7 +4,7 @@
     <h1>Proveedores registrados</h1>
     <div style="margin-bottom: 10px;">
         <div>
-            <button style="background-color: rgb(20, 97, 5); color: white;">PDF</button>
+            <a href="{% url 'inventario:pdf_proveedores' %}"><button style="background-color: rgb(20, 97, 5); color: white;">PDF</button></a>
             <a href="{% url 'inventario:crear_proveedor' %}"><button style="background-color: rgb(20, 97, 5); color: white;">Añadir</button></a>
             <a href="{% url 'inventario:listado_categorias' %}"><button style="background-color: rgb(20, 97, 5); color: white;">Revisar categorías</button></a>
             <a href="{% url 'inventario:listado_productos' %}"><button style="background-color: rgb(20, 97, 5); color: white;">Volver a listado de productos</button></a>

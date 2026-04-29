@@ -5,13 +5,20 @@
     <h1>{{ titulo }}</h1>
     {% if messages %}
         {% for message in messages %}
-            <div style="color: {{ message.tags|yesno:'green,red' }}; font-size: 20px; margin-bottom: 10px;">
-                {{ message }}
-            </div>
+            {% if message.tags == 'success' %}
+                <div class="message-success" style="color: green; font-size: 20px; margin-bottom: 10px;">
+                    {{ message }}
+                </div>
+            {% else %}
+                <div class="message-error" style="color: red; font-size: 20px; margin-bottom: 10px;">
+                    {{ message }}
+                </div>
+            {% endif %}
         {% endfor %}
     {% endif %}
 
     <div style="margin-bottom: 10px;">
+            <a href="{% url 'citas:pdf_citas' %}"><button style="background-color: rgb(20, 97, 5); color: white;">PDF</button></a>
             <a href="{% url 'citas:crear_cita' %}"><button style="background-color: rgb(20, 97, 5); color: white;">Añadir</button></a>
             <a href="{% url 'citas:buscar_cita' %}"><button style="background-color: rgb(20, 97, 5); color: white;">Filtrar</button></a>
     </div>
