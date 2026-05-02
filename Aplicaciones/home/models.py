@@ -8,4 +8,4 @@ class Contacto(models.Model):
     mensaje = models.TextField()
 
     def __str__(self):
-        return 'Contacto de {self.nombre} - {self.email}'
+        return f'Contacto de {self.nombre} - {self.email}'
