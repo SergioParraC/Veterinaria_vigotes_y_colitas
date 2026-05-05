@@ -1,4 +1,4 @@
-<em> # 🐾 Veterinaria Django </em>
+# 🐾 Veterinaria Django
 
 Proyecto web de gestión para una veterinaria, desarrollado con Django.
 
@@ -60,13 +60,13 @@ python -m pip install -r requirements.txt
 
 Con el entorno virtual activo:
 
-####1. Inicia el servidor de desarrollo:
+#### 1. Inicia el servidor de desarrollo:
 
 ```powershell
 python manage.py runserver
 ```
 
-####2. Abre en el navegador:
+#### 2. Abre en el navegador:
 
 - http://127.0.0.1:8000/
 - Panel admin: http://127.0.0.1:8000/admin/

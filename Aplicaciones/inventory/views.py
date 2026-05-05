@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from . import models
 from django.contrib import messages
 from . import forms
+from Aplicaciones.billing import models as billing_models
 
 # Se dejan comentarios en productos, ya que es la base para el resto de elementos
 
@@ -196,6 +197,10 @@ def home_producto(request):
 
 
 def productos_cliente(request):
+    carrito_compras = billing_models.Factura.objects.filter(estado='BORRADOR').first()
+    cant_elementos_carrito = 0
+    if carrito_compras:
+        cant_elementos_carrito = billing_models.FacturaDetalle.objects.filter(factura=carrito_compras).count()
     productos = models.Producto.objects.all()
     total = productos.count()
     data = {
@@ -203,17 +208,23 @@ def productos_cliente(request):
         'Productos': productos,
         'Total': total,
         'titulo': 'Catalogo de productos',
-        'titlePage': 'Catalogo cliente'
+        'titlePage': 'Catalogo cliente',
+        'cant_elementos_carrito': cant_elementos_carrito
     }
     return render(request, 'productos_cliente.html', data)
 
 
 def detalle_producto_cliente(request, id_producto):
+    carrito_compras = billing_models.Factura.objects.filter(estado='BORRADOR').first()
+    cant_elementos_carrito = 0
+    if carrito_compras:
+        cant_elementos_carrito = billing_models.FacturaDetalle.objects.filter(factura=carrito_compras).count()
     producto = models.Producto.objects.get(pk=id_producto)
     data = {
         'producto': producto,
         'titulo': producto.nombre,
-        'titlePage': f'Detalle | {producto.nombre}'
+        'titlePage': f'Detalle | {producto.nombre}',
+        'cant_elementos_carrito': cant_elementos_carrito
     }
     return render(request, 'productos-cliente-detail.html', data)
 

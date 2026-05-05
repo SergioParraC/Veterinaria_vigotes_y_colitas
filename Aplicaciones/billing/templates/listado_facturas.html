@@ -1,0 +1,29 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+<h1>Listado de facturas realizadas</h1>
+<table>
+    <thead>
+        <tr>
+            <th>Cliente</th>
+            <th>Mascota</th>
+            <th>Fecha</th>
+            <th>Estado</th>
+            <th>Total</th>
+            <th>Imprimir</th>
+        </tr>
+    </thead>
+    {% for fac in facturas %}
+        <tbody>
+            <tr>
+                <td>{{ fac.cliente.nombre }}</td>
+                <td>{{ fac.mascota.nombre }}</td>
+                <td>{{ fac.fecha }}</td>
+                <td>{{ fac.estado }}</td>
+                <td>${{ fac.total }}</td>
+                <td><a href="{% url 'billing:generar_pdf_factura' fac.id %}"><button type="button" style="background-color: blue;">PDF</button></a></td>
+            </tr>
+        </tbody>
+    {% endfor %}
+</table>
+{% endblock %}

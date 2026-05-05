@@ -99,19 +99,31 @@
             <p class="detail-meta"><strong>Categoría:</strong> {{ producto.categoria }}</p>
             <p class="detail-meta"><strong>Proveedor:</strong> {{ producto.proveedor }}</p>
 
-            {% if producto.stock > 10 %}
-                <p class="detail-stock">Stock disponible: {{ producto.stock }}</p>
-            {% else %}
+            {% if producto.stock <= 10 and producto.stock > 0 %}
                 <p class="detail-stock low">Ultimas unidades: {{ producto.stock }}</p>
+            {% else %}
+                {% if producto.stock <= 0 %}
+                    <p class="detail-stock low">Agotado</p>
+                {% else %}
+                    <p class="detail-stock">Disponibles: {{ producto.stock }}</p>
+                {% endif %}
             {% endif %}
 
             <h2 style="font-size: 20px; margin: 14px 0 0;">Descripción</h2>
             <p style="margin: 4px 0 0; font-size: 18px;">{{ producto.descripcion }}</p>
 
             <div class="detail-actions">
-                <button type="button" style="background: #1d4ed8;">Comprar</button>
                 <a href="{% url 'inventario:productos_cliente' %}"><button type="button">Volver al catálogo</button></a>
             </div>
+            {% if producto.stock > 0 %}
+                <form method="post" action="{% url 'billing:añadir_item_inventario' producto.id %}" class="buy-form-inline">
+                    {% csrf_token %}
+                    <div class="buy-form-row">
+                        <input type="number" name="cantidad" min="1" max="{{ producto.stock }}" value="1" required class="buy-qty-input">
+                        <button type="submit" class="buy-btn">Comprar</button>
+                    </div>
+                </form>
+            {% endif %}
         </section>
     </div>
 </div>
