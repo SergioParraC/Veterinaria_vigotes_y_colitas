@@ -5,6 +5,11 @@ from django.http import HttpResponse
 from datetime import datetime
 from io import BytesIO
 from xhtml2pdf import pisa
+from . import forms
+
+
+# Se dejan comentarios en productos, ya que es la base para el resto de elementos
+
 
 '''Listado de categorias'''
 def home_categorias(request):
@@ -16,18 +21,22 @@ def home_categorias(request):
     return render(request, 'categoria-home.html', data)
 
 '''Crear una nueva categoria'''
-def crear_categoria(request):
-    categoria_vacia = models.Categoria(nombre='', descripcion='')
+def crear_categoria_formulario(request):
     if request.method == "POST":
-        data = request.POST
-        categoria = models.Categoria()
+        formulario = forms.CategoriaForm(request.POST)
+        if formulario.is_valid():
+            categoria = models.Categoria()
+            categoria.nombre = formulario.cleaned_data["nombre"]
+            categoria.descripcion = formulario.cleaned_data["descripcion"]
+            categoria.save()
         categoria.nombre = data.get("Nombre")
         categoria.descripcion = data.get("Descripcion")
         categoria.save()
-        messages.success(request, 'Categoría creada correctamente.')
         return redirect('inventario:editar_categoria', id_categoria=categoria.id)
+    else:
+        formulario = forms.CategoriaForm()
     data = {
-        'categoria': categoria_vacia,
+        'formulario': formulario,
         'titulo': 'Crear categoría',
         'boton': 'Crear',
         'titlePage': 'Crear categoría'
@@ -35,27 +44,48 @@ def crear_categoria(request):
     return render(request, 'categoria-detail.html', data)
 
 '''Editar categoria, usando el mismo template para crear'''
-def editar_categoria(request, id_categoria):
+def guardar_categoria(request, id_categoria):
     categoria = models.Categoria.objects.get(pk=id_categoria)
     if request.method == "POST":
-        data = request.POST
-        categoria.nombre = data.get("Nombre")
-        categoria.descripcion = data.get("Descripcion")
-        categoria.save()
+        formulario = forms.CategoriaForm(request.POST)
+        if formulario.is_valid():
+            categoria.nombre = formulario.cleaned_data["nombre"]
+            categoria.descripcion = formulario.cleaned_data["descripcion"]
+            categoria.save()
+
+            data = {
+                'categoria': categoria,
+                'formulario': forms.CategoriaForm(initial={
+                    'nombre': categoria.nombre,
+                    'descripcion': categoria.descripcion
+                }),
+                'titulo': 'Editar categoría',
+                'boton': 'Actualizar',
+                'mensaje': 'Categoría actualizada correctamente.',
+                'titlePage': 'Editar Categoría'
+            }
+            return render(request, 'categoria-detail.html', data)
         data = {
             'categoria': categoria,
+            'formulario': formulario,
             'titulo': 'Editar categoría',
             'boton': 'Actualizar',
-            'mensaje': 'Categoría actualizada correctamente.',
-            'titlePage': 'Editar Categoría'
+            'titlePage': 'Editar Categoría',
+            'mensaje': formulario.errors.as_text()
         }
         return render(request, 'categoria-detail.html', data)
-    data = {
-        'categoria': categoria,
-        'titulo': 'Editar categoría',
-        'boton': 'Actualizar',
-        'titlePage': 'Editar Categoría'
-    }
+    else:
+        formulario = forms.CategoriaForm(initial={
+            'nombre': categoria.nombre,
+            'descripcion': categoria.descripcion
+        })
+        data = {
+            'categoria': categoria,
+            'formulario': formulario,
+            'titulo': 'Editar categoría',
+            'boton': 'Actualizar',
+            'titlePage': 'Editar Categoría'
+        }
     return render(request, 'categoria-detail.html', data)
 
 '''Listado de proveedores'''
@@ -63,63 +93,106 @@ def home_proveedores(request):
     proveedores = models.Proveedor.objects.all()
     total = proveedores.count()
     return render(request, 'proveedor-home.html', {
-        'Proveedores': proveedores,
-        'Total': total,
+        'proveedores': proveedores,
+        'total': total,
         'titlePage': 'Listado Proveedores'
     })
 
 '''Crear un nuevo proveedor'''
-def crear_proveedor(request):
-    proveedor_vacio = models.Proveedor(nombre='', contacto='', telefono='', email='', direccion='')
+def crear_proveedor_formulario(request):
     if request.method == "POST":
-        data = request.POST
-        proveedor = models.Proveedor()
-        proveedor.nombre = data.get("Nombre")
-        proveedor.contacto = data.get("Contacto")
-        proveedor.telefono = data.get("Telefono")
-        proveedor.email = data.get("Email")
-        proveedor.direccion = data.get("Direccion")
-        proveedor.save()
-        messages.success(request, 'Proveedor creado correctamente.')
+        formulario = forms.ProveedorForm(request.POST)
+        if formulario.is_valid():
+            proveedor = models.Proveedor()
+            proveedor.nombre = formulario.cleaned_data["nombre"]
+            proveedor.contacto = formulario.cleaned_data["contacto"]
+            proveedor.telefono = formulario.cleaned_data["telefono"]
+            proveedor.email = formulario.cleaned_data["email"]
+            proveedor.direccion = formulario.cleaned_data["direccion"]
+            proveedor.save()
+            mensaje = 'Proveedor creado correctamente.'
         return redirect('inventario:editar_proveedor', id_proveedor=proveedor.id)
+    else:
+        formulario = forms.ProveedorForm()
     data = {
-        'proveedor': proveedor_vacio,
+        'formulario': formulario,
         'titulo': 'Crear proveedor',
         'boton_text': 'Crear',
-        'titlePage': 'Crear producto'
+        'titlePage': 'Crear proveedor'
     }
     return render(request, 'proveedor-detail.html', data)
 
+'''Eliminar un proveedor por ID'''
+def eliminar_proveedor(request, id_proveedor):
+    try:
+        proveedor = models.Proveedor.objects.get(pk=id_proveedor)
+        proveedor.delete()
+        messages.success(request, 'Proveedor eliminado exitosamente.')
+    except models.Proveedor.DoesNotExist:
+        messages.error(request, 'El proveedor no existe o ya fue eliminado.')
+    return redirect('inventario:listado_proveedores')
+
 '''Editar proveedor, usando el mismo template para crear'''
-def editar_proveedor(request, id_proveedor):
+def guardar_proveedor(request, id_proveedor):
     proveedor = models.Proveedor.objects.get(pk=id_proveedor)
     if request.method == "POST":
-        data = request.POST
-        proveedor.nombre = data.get("Nombre")
-        proveedor.contacto = data.get("Contacto")
-        proveedor.telefono = data.get("Telefono")
-        proveedor.email = data.get("Email")
-        proveedor.direccion = data.get("Direccion")
-        proveedor.save()
-        return render(request, 'proveedor-detail.html', {
+        formulario = forms.ProveedorForm(request.POST)
+        if formulario.is_valid():
+            proveedor.nombre = formulario.cleaned_data["nombre"]
+            proveedor.contacto = formulario.cleaned_data["contacto"]
+            proveedor.telefono = formulario.cleaned_data["telefono"]
+            proveedor.email = formulario.cleaned_data["email"]
+            proveedor.direccion = formulario.cleaned_data["direccion"]
+            proveedor.save()
+            data = {
+                'proveedor': proveedor,
+                'formulario': forms.ProveedorForm(initial={
+                    'nombre': proveedor.nombre,
+                    'contacto': proveedor.contacto,
+                    'telefono': proveedor.telefono,
+                    'email': proveedor.email,
+                    'direccion': proveedor.direccion
+                }),
+                'titulo': 'Editar proveedor',
+                'boton_text': 'Actualizar',
+                'mensaje': 'El proveedor se ha actualizado correctamente',
+                'titlePage': 'Editar proveedor'
+            }
+            return render(request, 'proveedor-detail.html', data)
+        data = {
+            'formulario': formulario,
             'proveedor': proveedor,
             'titulo': 'Editar proveedor',
             'boton_text': 'Actualizar',
-            'mensaje': 'El proveedor se ha actualizado correctamente',
-            'titlePage': 'Ediar proveedor'
+            'titlePage': 'Editar proveedor',
+            'mensaje': formulario.errors.as_text()
+        }
+        return render(request, 'proveedor-detail.html', data)
+    else:
+        formulario = forms.ProveedorForm(initial={
+            'nombre': proveedor.nombre,
+            'contacto': proveedor.contacto,
+            'telefono': proveedor.telefono,
+            'email': proveedor.email,
+            'direccion': proveedor.direccion
         })
-    return render(request, 'proveedor-detail.html', {
-        'proveedor': proveedor,
-        'titulo': 'Editar proveedor',
-        'boton_text': 'Actualizar',
-        'titlePage': 'Ediar proveedor'
-    })
+        data = {
+            'formulario': formulario,
+            'proveedor': proveedor,
+            'titulo': 'Editar proveedor',
+            'boton_text': 'Actualizar',
+            'titlePage': 'Editar proveedor'
+        }
+    return render(request, 'proveedor-detail.html', data)
 
 '''Listado de productos'''
 def home_producto(request):
+    # Trae todos los productos, y un totalizador
     dataProductos = models.Producto.objects.all()
     dataTotal = models.Producto.objects.count()
+    # Se envia el formulario de filtro
     data = {
+        'formulario': forms.BuscarProductosForm(),
         'Productos': dataProductos,
         'Total': dataTotal,
         'titulo': 'Todos los productos',
@@ -127,94 +200,138 @@ def home_producto(request):
     }
     return render(request, 'inventory-home.html', data)
 
-'''Crear un producto'''
-def crear_producto(request):
-    categorias = models.Categoria.objects.all()
-    proveedores = models.Proveedor.objects.all()
-    producto_vacio = models.Producto(
-        nombre='',
-        categoria=None,
-        proveedor=None,
-        descripcion='',
-        precio='',
-        stock='',
-        img=None
-    )
+
+def productos_cliente(request):
+    productos = models.Producto.objects.all()
+    total = productos.count()
     data = {
-        'producto': producto_vacio,
-        'categorias': categorias,
-        'proveedores': proveedores,
+        'formulario': forms.BuscarProductosForm(),
+        'Productos': productos,
+        'Total': total,
+        'titulo': 'Catalogo de productos',
+        'titlePage': 'Catalogo cliente'
+    }
+    return render(request, 'productos_cliente.html', data)
+
+
+def detalle_producto_cliente(request, id_producto):
+    producto = models.Producto.objects.get(pk=id_producto)
+    data = {
+        'producto': producto,
+        'titulo': producto.nombre,
+        'titlePage': f'Detalle | {producto.nombre}'
+    }
+    return render(request, 'productos-cliente-detail.html', data)
+
+'''Crear un producto'''
+def crear_producto_formulario(request):
+    # Validación de formulario por PST
+    if request.method == "POST":
+        formulario = forms.ProductForm(request.POST, request.FILES)
+        # Si el formulario es válido, se crea un nuevo producto con los datos del formulario y se guarda en la base de datos
+        if formulario.is_valid():
+            producto = models.Producto()
+            producto.nombre = formulario.cleaned_data["nombre"]
+            producto.categoria = formulario.cleaned_data["categoria"]
+            producto.proveedor = formulario.cleaned_data["proveedor"]
+            producto.descripcion = formulario.cleaned_data["descripcion"]
+            producto.precio = formulario.cleaned_data["precio"]
+            producto.stock = formulario.cleaned_data["cantidad_en_stock"]
+            # Imagen es opcional
+            if formulario.cleaned_data.get("imagen"):
+                producto.img = formulario.cleaned_data["imagen"]
+            producto.save()
+            # Redirige a la pagina de edicion, por el ID
+            return redirect('inventario:guardar_producto', id_producto=producto.id)
+    else:
+        formulario = forms.ProductForm()
+
+    data = {
+        'formulario': formulario,
+        'producto': None,
         'boton': 'Crear',
         'titulo': 'Crear producto',
-        'titlePage': 'Ediar producto'
+        'titlePage': 'Crear producto',
     }
-    if request.method == "POST":
-        data_post = request.POST
-        files = request.FILES
-        producto = models.Producto()
-        producto.nombre = data_post.get("Nombre")
-        producto.categoria_id = data_post.get("Categoria")
-        producto.proveedor_id = data_post.get("Proveedor")
-        producto.descripcion = data_post.get("Descripcion")
-        producto.precio = data_post.get("Precio")
-        producto.stock = data_post.get("Stock")
-        producto.img = files.get("Imagen")
-        producto.save()
-        return redirect('inventario:detalle_producto', id_producto=producto.id)
     return render(request, 'inventory-detail.html', data)
 
 '''Detalles de cada producto para crear uno nuevo'''
-def detalle_producto(request, id_producto):
-    dataProducto = models.Producto.objects.get(pk = id_producto)
-    categorias = models.Categoria.objects.all()
-    proveedores = models.Proveedor.objects.all()
-    data = { 'producto' : dataProducto,
-             'categorias' : categorias,
-             'proveedores' : proveedores,
-             'boton' : 'Actualizar',
-             'titulo' : 'Editar producto',
-             'titlePage': 'Ediar producto'
-             }
+def guardar_producto(request, id_producto):
+    # Se trae el producto por ID
+    producto = models.Producto.objects.get(pk = id_producto)
+    # Si se envia el formulario por POST, se valida y se actualiza el producto
     if request.method == "POST":
-        data = request.POST
-        files = request.FILES
-        producto = dataProducto
-        producto.nombre = data.get("Nombre")
-        producto.categoria_id = data.get("Categoria")
-        producto.proveedor_id = data.get("Proveedor")
-        producto.descripcion = data.get("Descripcion")
-        producto.precio = data.get("Precio")
-        producto.stock = data.get("Stock")
-        if files.get("Imagen"):
-            producto.img = files.get("Imagen")
-        producto.save()
+        formulario = forms.ProductForm(request.POST, request.FILES)
+        if formulario.is_valid():
+            producto.nombre = formulario.cleaned_data["nombre"]
+            producto.categoria = formulario.cleaned_data["categoria"]
+            producto.proveedor = formulario.cleaned_data["proveedor"]
+            producto.descripcion = formulario.cleaned_data["descripcion"]
+            producto.precio = formulario.cleaned_data["precio"]
+            producto.stock = formulario.cleaned_data["cantidad_en_stock"]
+            if formulario.cleaned_data.get("imagen"):
+                producto.img = formulario.cleaned_data["imagen"]
+            producto.save()
+            data = {
+                'producto' : producto,
+                'formulario': forms.ProductForm(initial={
+                    'nombre': producto.nombre,
+                    'categoria': producto.categoria_id,
+                    'proveedor': producto.proveedor_id,
+                    'descripcion': producto.descripcion,
+                    'precio': producto.precio,
+                    'cantidad_en_stock': producto.stock
+                }),
+                'boton' : 'Actualizar',
+                'titulo' : 'Editar producto',
+                'mensaje': 'Producto actualizado correctamente.',
+                'titlePage': 'Editar producto'
+             }
+            return render(request, 'inventory-detail.html', data)
+        # Si no es válido, se muestra el formulario con datos iniciales y con los errores
         data = {
             'producto': producto,
-            'categorias': categorias,
-            'proveedores': proveedores,
-            'mensaje': 'Producto editado exitosamente',
+            'formulario': formulario,
             'boton': 'Actualizar',
-            'titlePage': 'Ediar producto'
+            'titulo': 'Editar producto',
+            'titlePage': 'Editar producto',
+            'mensaje': formulario.errors.as_text()
         }
         return render(request, 'inventory-detail.html', data)
+    # Si es otro método, se muestra el formulario con los datos del producto
+    else: 
+        # Se carga el formulario con los datos del producto para mostrar en el template
+        formulario = forms.ProductForm(initial={
+            'nombre': producto.nombre,
+            'categoria': producto.categoria_id,
+            'proveedor': producto.proveedor_id,
+            'descripcion': producto.descripcion,
+            'precio': producto.precio,
+            'cantidad_en_stock': producto.stock
+        })
+        # Se envia el producto para el id y el formulario
+        data = {
+            'producto': producto,
+            'formulario': formulario,
+            'boton': 'Actualizar',
+            'titulo': 'Editar producto',
+            'titlePage': 'Editar producto'
+        }
+    # Se renderiza el formuario según la data armada
     return render(request, 'inventory-detail.html', data)
 
-'''Vista para buscar productos'''
-def buscar_producto(request):
-    categorias = models.Categoria.objects.all()
-    data = {
-            'categorias': categorias,
-            'titlePage': 'Filtrar busqueda'
-            }
-    return render(request, 'inventory-search.html', data)
-
-'''Se pasan los filtros por GET, se filtran los productos'''
+'''Se pasan los filtros por POST, se filtran los productos'''
 def filtrar_productos(request):
+    # Se obtiene el formulario con los datos enviados por POST
+    formulario = forms.BuscarProductosForm(request.POST)
+    # Se obtienen todos los productos para luego aplicar los filtros
     productos = models.Producto.objects.all()
-    nombre = request.GET.get('nombre', '').strip()
-    categoria = request.GET.get('categoria', '')
-    precio_min = request.GET.get('precio_min', '')
-    precio_max = request.GET.get('precio_max', '')
+    # Se obtienen los datos del formulario para aplicar los filtros correspondientes
+    nombre = formulario.data.get('nombre', '')
+    categoria = formulario.data.get('categoria', '')
+    precio_min = formulario.data.get('precio_minimo', '')
+    precio_max = formulario.data.get('precio_maximo', '')
+    # Cada filtro no es obligatorio, se verifica
     if nombre:
         productos = productos.filter(nombre__icontains=nombre)
     if categoria:
@@ -224,17 +341,23 @@ def filtrar_productos(request):
     if precio_max:
         productos = productos.filter(precio__lte=precio_max)
     dataTotal = productos.count()
-    return render(request, 'inventory-home.html', {
+    data = {
+        'formulario': formulario,
         'Productos': productos,
         'Total': dataTotal,
-        'titulo': 'Resultados de búsqueda'
-    })
+        'titulo': 'Resultados de búsqueda',
+        'titlePage': 'Resultados de búsqueda',
+        'volver_menu': True
+    }
+    return render(request, 'inventory-home.html', data)
 
 '''Eliminar un producto por ID'''
 def eliminar_producto(request, id_producto):
     try:
+        # Obtiene el producto por su ID y lo elimina
         producto = models.Producto.objects.get(pk=id_producto)
         producto.delete()
+        # Manera de enviar mensajes de éxito o error al template usando el framework de mensajes de Django
         messages.success(request, 'Producto eliminado exitosamente.')
     except models.Producto.DoesNotExist:
         messages.error(request, 'El producto no existe o ya fue eliminado.')
