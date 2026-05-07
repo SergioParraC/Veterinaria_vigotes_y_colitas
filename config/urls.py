@@ -9,6 +9,7 @@ urlpatterns = [
     path('', include('Aplicaciones.home.urls')),
     path('pets/', include('Aplicaciones.pets.urls')),
     path('inventario/', include(('Aplicaciones.inventory.urls', 'inventario'), namespace='inventario')),
+    path('inventario/carrito/', include(('Aplicaciones.billing.urls', 'billing'), namespace='billing_invetario')),
     path('citas/', include(('Aplicaciones.veterinary.urls', 'citas'), namespace='citas')),
     path('users/', include(('Aplicaciones.users.urls', 'users'), namespace='users')),
     path('veterinary/', RedirectView.as_view(url='/citas/', permanent=False)),

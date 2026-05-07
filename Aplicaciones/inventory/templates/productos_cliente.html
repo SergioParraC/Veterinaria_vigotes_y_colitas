@@ -99,7 +99,18 @@
 		color: #475569;
 		font-size: 18px;
 	}
-
+    .buy-form-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .buy-qty-input {
+        width: 60px;
+        padding: 4px 6px;
+        border: 1px solid #bdbdbd;
+        border-radius: 4px;
+        margin-top: 10px;
+    }
 </style>
 
 <div class="catalog-wrapper">
@@ -108,6 +119,9 @@
 		<p style="font-size: 16px; color: #4b5563;">{{ Total }} productos disponibles</p>
 	</div>
     {% include "filtro_productos.html" %}
+    {% if mensaje %}
+        <p style="color: green;">{{ mensaje }}</p>
+    {% endif %}
 	{% if Productos %}
 	<div class="catalog-grid">
 		{% for producto in Productos %}
@@ -124,15 +138,27 @@
 				<h2 class="product-name">{{ producto.nombre }}</h2>
 				<p class="product-name">$ {{ producto.precio }}</p>
 
-				{% if producto.stock > 10 %}
-					<p class="product-stock">Stock disponible: {{ producto.stock }}</p>
-				{% else %}
+				{% if producto.stock <= 10 and producto.stock > 0 %}
 					<p class="product-stock low">Ultimas unidades: {{ producto.stock }}</p>
+				{% else %}
+                    {% if producto.stock <= 0 %}
+                        <p class="product-stock low">Agotado</p>
+                    {% else %}
+                        <p class="product-stock">Disponibles: {{ producto.stock }}</p>
+                    {% endif %}
 				{% endif %}
 
 				<div class="product-actions">
 					<a href="{% url 'inventario:detalle_producto_cliente' producto.id %}"><button type="button">Ver mas</button></a>
-					<button type="button" style="background-color: #1d4ed8">Comprar</button>
+					{% if producto.stock > 0 %}
+						<form method="post" action="{% url 'billing:añadir_item_inventario' producto.id %}" class="buy-form-inline">
+							{% csrf_token %}
+							<div class="buy-form-row">
+								<input type="number" name="cantidad" min="1" max="{{ producto.stock }}" value="1" required class="buy-qty-input">
+								<button type="submit" style="background: blue;">Comprar</button>
+							</div>
+						</form>
+					{% endif %}
 				</div>
 			</div>
 		</article>

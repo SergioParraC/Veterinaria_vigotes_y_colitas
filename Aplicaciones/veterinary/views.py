@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from .models import Cita
 from django.http import HttpResponse
+from Aplicaciones.pets import models as pets_models
 
 
 def home_citas(request):
@@ -16,13 +17,13 @@ def home_citas(request):
 
 
 def crear_cita(request):
+    clientes = pets_models.Dueño.objects.all()
+    mascotas = pets_models.Mascota.objects.all()
     if request.method == "POST":
         data = request.POST
         cita = Cita()
-        cita.nombre_mascota = data.get("NombreMascota")
-        cita.dueño_mascota = data.get("DueñoMascota")
-        cita.dueño_telefono = data.get("TeléfonoDueño")
-        cita.dueño_email = data.get("EmailDueño")
+        cita.cliente_id = data.get("Cliente")
+        cita.mascota_id = data.get("Mascota")
         cita.tipo = data.get("Tipo")
         cita.fecha_cita = data.get("FechaCita")
         cita.hora_cita = data.get("HoraCita")
@@ -33,6 +34,8 @@ def crear_cita(request):
         messages.success(request, 'Cita creada correctamente.')
         return redirect('citas:detalle_cita', id_cita=cita.id)
     data = {
+        'clientes': clientes,
+        'mascotas': mascotas,
         'cita': None,
         'titulo': 'Crear Cita',
         'boton': 'Crear',
@@ -43,12 +46,12 @@ def crear_cita(request):
 
 def detalle_cita(request, id_cita):
     cita = Cita.objects.get(pk=id_cita)
+    clientes = pets_models.Dueño.objects.all()
+    mascotas = pets_models.Mascota.objects.all()
     if request.method == "POST":
         data = request.POST
-        cita.nombre_mascota = data.get("NombreMascota")
-        cita.dueño_mascota = data.get("DueñoMascota")
-        cita.dueño_telefono = data.get("TeléfonoDueño")
-        cita.dueño_email = data.get("EmailDueño")
+        cita.cliente_id = data.get("Cliente")
+        cita.mascota_id = data.get("Mascota")
 
         cita.tipo = data.get("Tipo")
         cita.fecha_cita = data.get("FechaCita")
@@ -59,6 +62,8 @@ def detalle_cita(request, id_cita):
         cita.save()
         return render(request, 'cita-detail.html', {
             'cita': cita,
+            'clientes': clientes,
+            'mascotas': mascotas,
             'titulo': 'Editar Cita',
             'boton': 'Actualizar',
             'mensaje': 'Cita editada exitosamente',
@@ -67,6 +72,8 @@ def detalle_cita(request, id_cita):
     
     return render(request, 'cita-detail.html', {
         'cita': cita,
+        'clientes': clientes,
+        'mascotas': mascotas,
         'titulo': 'Editar Cita',
         'boton': 'Actualizar',
         'titlePage': 'Editar Cita'
@@ -86,7 +93,7 @@ def filtrar_citas(request):
     tipo = request.GET.get('tipo', '')
     estado = request.GET.get('estado', '')
     if nombre:
-        citas = citas.filter(nombre_mascota__icontains=nombre)
+        citas = citas.filter(mascota__nombre__icontains=nombre)
     if tipo:
         citas = citas.filter(tipo=tipo)
     if estado:

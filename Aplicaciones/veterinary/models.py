@@ -21,10 +21,6 @@ class Cita(models.Model):
         
     ]
     
-   
-
-    
-
     cliente = models.ForeignKey('pets.Dueño', on_delete=models.PROTECT, null=True, blank=True)
     mascota = models.ForeignKey('pets.Mascota', on_delete=models.SET_NULL, null=True, blank=True)
     tipo = models.CharField(max_length=50, choices=tipo_fields, default= 'Consulta', verbose_name='Tipo de Cita')

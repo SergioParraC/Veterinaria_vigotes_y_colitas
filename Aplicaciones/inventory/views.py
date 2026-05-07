@@ -6,9 +6,15 @@ from datetime import datetime
 from io import BytesIO
 from xhtml2pdf import pisa
 from . import forms
+from Aplicaciones.billing import models as billing_models
 
 
 # Se dejan comentarios en productos, ya que es la base para el resto de elementos
+
+
+def _obtener_cantidad_carrito():
+    carrito_compras = billing_models.Factura.objects.filter(estado='BORRADOR').first()
+    return billing_models.FacturaDetalle.objects.filter(factura=carrito_compras).count()
 
 
 '''Listado de categorias'''
@@ -196,12 +202,16 @@ def home_producto(request):
         'Productos': dataProductos,
         'Total': dataTotal,
         'titulo': 'Todos los productos',
-        'titlePage': 'Productos'
+        'titlePage': 'Productos',
+        'origen_filtro': 'inventario'
     }
     return render(request, 'inventory-home.html', data)
 
 
 def productos_cliente(request):
+    carrito_compras = billing_models.Factura.objects.filter(estado='BORRADOR').first()
+    cant_elementos_carrito = billing_models.FacturaDetalle.objects.filter(factura=carrito_compras).count()
+    
     productos = models.Producto.objects.all()
     total = productos.count()
     data = {
@@ -209,17 +219,22 @@ def productos_cliente(request):
         'Productos': productos,
         'Total': total,
         'titulo': 'Catalogo de productos',
-        'titlePage': 'Catalogo cliente'
+        'titlePage': 'Catalogo cliente',
+        'cant_elementos_carrito': cant_elementos_carrito,
+        'origen_filtro': 'cliente'
     }
     return render(request, 'productos_cliente.html', data)
 
 
 def detalle_producto_cliente(request, id_producto):
+    carrito_compras = billing_models.Factura.objects.filter(estado='BORRADOR').first()
+    cant_elementos_carrito = billing_models.FacturaDetalle.objects.filter(factura=carrito_compras).count()
     producto = models.Producto.objects.get(pk=id_producto)
     data = {
         'producto': producto,
         'titulo': producto.nombre,
-        'titlePage': f'Detalle | {producto.nombre}'
+        'titlePage': f'Detalle | {producto.nombre}',
+        'cant_elementos_carrito': cant_elementos_carrito
     }
     return render(request, 'productos-cliente-detail.html', data)
 
@@ -324,22 +339,24 @@ def guardar_producto(request, id_producto):
 def filtrar_productos(request):
     # Se obtiene el formulario con los datos enviados por POST
     formulario = forms.BuscarProductosForm(request.POST)
+    origen_filtro = request.POST.get('origen_filtro', 'inventario')
     # Se obtienen todos los productos para luego aplicar los filtros
     productos = models.Producto.objects.all()
-    # Se obtienen los datos del formulario para aplicar los filtros correspondientes
-    nombre = formulario.data.get('nombre', '')
-    categoria = formulario.data.get('categoria', '')
-    precio_min = formulario.data.get('precio_minimo', '')
-    precio_max = formulario.data.get('precio_maximo', '')
-    # Cada filtro no es obligatorio, se verifica
-    if nombre:
-        productos = productos.filter(nombre__icontains=nombre)
-    if categoria:
-        productos = productos.filter(categoria_id=categoria)
-    if precio_min:
-        productos = productos.filter(precio__gte=precio_min)
-    if precio_max:
-        productos = productos.filter(precio__lte=precio_max)
+    if formulario.is_valid():
+        # Se obtienen los datos validados del formulario para aplicar los filtros correspondientes
+        nombre = formulario.cleaned_data.get('nombre')
+        categoria = formulario.cleaned_data.get('categoria')
+        precio_min = formulario.cleaned_data.get('precio_minimo')
+        precio_max = formulario.cleaned_data.get('precio_maximo')
+        # Cada filtro no es obligatorio, se verifica
+        if nombre:
+            productos = productos.filter(nombre__icontains=nombre)
+        if categoria:
+            productos = productos.filter(categoria=categoria)
+        if precio_min is not None:
+            productos = productos.filter(precio__gte=precio_min)
+        if precio_max is not None:
+            productos = productos.filter(precio__lte=precio_max)
     dataTotal = productos.count()
     data = {
         'formulario': formulario,
@@ -347,8 +364,14 @@ def filtrar_productos(request):
         'Total': dataTotal,
         'titulo': 'Resultados de búsqueda',
         'titlePage': 'Resultados de búsqueda',
-        'volver_menu': True
+        'origen_filtro': origen_filtro
     }
+    # Valida de donde viene, si de la ventana de edición o de la ventana de clientes
+    if origen_filtro == 'cliente':
+        carrito_compras = billing_models.Factura.objects.filter(estado='BORRADOR').first()
+        data['cant_elementos_carrito'] = billing_models.FacturaDetalle.objects.filter(factura=carrito_compras).count()
+        return render(request, 'productos_cliente.html', data)
+    data['volver_menu'] = True
     return render(request, 'inventory-home.html', data)
 
 '''Eliminar un producto por ID'''
@@ -378,97 +401,14 @@ def _generar_pdf(html_content, filename):
 def generar_pdf_productos(request):
     productos = models.Producto.objects.all()
     fecha = datetime.now().strftime('%d/%m/%Y %H:%M')
-    filas = ''
-    for p in productos:
-        stock_style = 'font-weight: bold; color: #d32f2f;' if p.stock <= 10 else ''
-        filas += f'''
-        <tr>
-            <td>{p.nombre}</td>
-            <td>{p.categoria}</td>
-            <td>{p.proveedor}</td>
-            <td>{p.descripcion or ''}</td>
-            <td>$ {p.precio}</td>
-            <td style="{stock_style}">{p.stock}</td>
-        </tr>'''
-    html = f'''
-    <html>
-    <head>
-        <meta charset="UTF-8">
-        <style>
-            body {{ font-family: Helvetica, sans-serif; font-size: 12px; }}
-            h1 {{ color: #146105; text-align: center; }}
-            .fecha {{ text-align: right; font-size: 10px; color: #666; margin-bottom: 10px; }}
-            table {{ width: 100%; border-collapse: collapse; margin-top: 10px; }}
-            th {{ background-color: #acffaf; color: #000; padding: 6px 8px; border: 1px solid #000; text-align: left; }}
-            td {{ padding: 5px 8px; border: 1px solid #000; }}
-            .total {{ margin-top: 10px; font-size: 14px; font-weight: bold; }}
-        </style>
-    </head>
-    <body>
-        <h1>Listado de Productos</h1>
-        <p class="fecha">Generado: {fecha}</p>
-        <table>
-            <thead>
-                <tr>
-                    <th>Nombre</th>
-                    <th>Categoria</th>
-                    <th>Proveedor</th>
-                    <th>Descripcion</th>
-                    <th>Precio</th>
-                    <th>Stock</th>
-                </tr>
-            </thead>
-            <tbody>{filas}</tbody>
-        </table>
-        <p class="total">Total de productos: {productos.count()}</p>
-    </body>
-    </html>'''
-    return _generar_pdf(html, 'productos.pdf')
+    cant_productos = productos.count()
+    html_contend = render(request, 'pdf_export/pdf_productos.html', {'productos': productos, 'fecha': fecha, 'cant_productos': cant_productos}).content.decode('utf-8')
+    return _generar_pdf(html_contend, 'productos.pdf')
 
 
 def generar_pdf_proveedores(request):
     proveedores = models.Proveedor.objects.all()
     fecha = datetime.now().strftime('%d/%m/%Y %H:%M')
-    filas = ''
-    for p in proveedores:
-        filas += f'''
-        <tr>
-            <td>{p.nombre}</td>
-            <td>{p.contacto}</td>
-            <td>{p.telefono}</td>
-            <td>{p.email}</td>
-            <td>{p.direccion}</td>
-        </tr>'''
-    html = f'''
-    <html>
-    <head>
-        <meta charset="UTF-8">
-        <style>
-            body {{ font-family: Helvetica, sans-serif; font-size: 12px; }}
-            h1 {{ color: #146105; text-align: center; }}
-            .fecha {{ text-align: right; font-size: 10px; color: #666; margin-bottom: 10px; }}
-            table {{ width: 100%; border-collapse: collapse; margin-top: 10px; }}
-            th {{ background-color: #acffaf; color: #000; padding: 6px 8px; border: 1px solid #000; text-align: left; }}
-            td {{ padding: 5px 8px; border: 1px solid #000; }}
-            .total {{ margin-top: 10px; font-size: 14px; font-weight: bold; }}
-        </style>
-    </head>
-    <body>
-        <h1>Listado de Proveedores</h1>
-        <p class="fecha">Generado: {fecha}</p>
-        <table>
-            <thead>
-                <tr>
-                    <th>Nombre</th>
-                    <th>Contacto</th>
-                    <th>Telefono</th>
-                    <th>Email</th>
-                    <th>Direccion</th>
-                </tr>
-            </thead>
-            <tbody>{filas}</tbody>
-        </table>
-        <p class="total">Total de proveedores: {proveedores.count()}</p>
-    </body>
-    </html>'''
-    return _generar_pdf(html, 'proveedores.pdf')
+    cant_proveedores = proveedores.count()
+    html_contend = render(request, 'pdf_export/pdf_proveedores.html', {'proveedores': proveedores, 'fecha': fecha, 'cant_proveedores': cant_proveedores}).content.decode('utf-8')
+    return _generar_pdf(html_contend, 'proveedores.pdf')

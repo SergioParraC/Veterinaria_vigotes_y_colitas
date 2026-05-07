@@ -4,7 +4,7 @@
     <h1>Proveedores registrados</h1>
     <div style="margin-bottom: 10px;">
         <div>
-            <button>PDF</button>
+            <a href="{% url 'inventario:pdf_proveedores' %}"><button>PDF</button></a>
             <a href="{% url 'inventario:crear_proveedor' %}"><button>Añadir proveedor</button></a>
             <a href="{% url 'inventario:listado_categorias' %}"><button>Revisar categorías</button></a>
             <a href="{% url 'inventario:listado_productos' %}"><button>Volver a listado de productos</button></a>

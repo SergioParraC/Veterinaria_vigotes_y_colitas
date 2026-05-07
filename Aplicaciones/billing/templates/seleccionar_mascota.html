@@ -1,0 +1,16 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+<h1>Seleccionar mascota</h1>
+
+<h1 style="font-size: 24px; margin-bottom: 16px;">Selecciona la mascota del cliente</h1>
+<div class="form-container">
+	<form method="post" action="{% url 'billing:seleccionar_mascota' %}">
+		{% csrf_token %}
+
+		<label>{{ formulario.mascota.label }}:</label>
+		{{ formulario.mascota }}
+		<button type="submit">Crear factura en borrador</button>
+	</form>
+</div>
+{% endblock %}

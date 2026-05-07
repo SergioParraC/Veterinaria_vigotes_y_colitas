@@ -8,15 +8,18 @@
 		</div>
 		<nav>
 			<ul style="list-style: none; display: flex; gap: 1.5rem; margin: 0; padding: 0;">
-				<li><a href="/" style="color: black; text-decoration: none; font-weight: 500; font-size: 20px;"><button style="background-color: rgb(20, 97, 5); color: white;">Inicio</button></a></li>
-				<li><a href="/servicios/" style=" color: black; text-decoration: none; font-weight: 500; font-size: 20px;"><button style="background-color: rgb(20, 97, 5); color: white;">Facturación</button></a></li>
-				<li><a href="/pets/" style="color: black; text-decoration: none; font-weight: 500; font-size: 20px;"><button style="background-color: rgb(20, 97, 5); color: white;">Mascotas</button></a></li>
-				<li><a href="/inventario/" style="color: black; text-decoration: none; font-weight: 500; font-size: 20px;"><button style="background-color: rgb(20, 97, 5); color: white;">Productos</button></a></li>
-				<li><a href="/citas/" style="color: black; text-decoration: none; font-weight: 500; font-size: 20px;"><button style="background-color: rgb(20, 97, 5); color: white;">Citas</button></a></li>
-                <li><a href="/users/usuario/" style="color: black; text-decoration: none; font-weight: 500; font-size: 20px;"><button style="background-color: rgb(20, 97, 5); color: white;">Inicio de sesión</button></a></li>
-				<li><a href="/contacto/" style="color: black; text-decoration: none; font-weight: 500; font-size: 20px;"><button style="background-color: rgb(20, 97, 5); color: white;">Contacto</button></a></li>
-
-                
+				{% if cant_elementos_carrito > 0 %}
+					<li><a href="/inventario/carrito/mostrar-carrito/" style="color: black; text-decoration: none; font-weight: 500; font-size: 20px;"><button>Carrito ({{ cant_elementos_carrito }})</button></a></li>
+				{% endif %}
+				
+				<li><a href="/" style="color: black; text-decoration: none; font-weight: 500; font-size: 20px;"><button>Inicio</button></a></li>
+				<li><a href="/inventario/carrito/listar-facturas/" style=" color: black; text-decoration: none; font-weight: 500; font-size: 20px;"><button>Facturación</button></a></li>
+				<li><a href="/pets/" style="color: black; text-decoration: none; font-weight: 500; font-size: 20px;"><button>Mascotas</button></a></li>
+				<li><a href="/inventario/listado-productos/" style="color: black; text-decoration: none; font-weight: 500; font-size: 20px;"><button>Inventario</button></a></li>
+				<li><a href="/inventario/" style="color: black; text-decoration: none; font-weight: 500; font-size: 20px;"><button>Productos clientes</button></a></li>
+				<li><a href="/citas/" style="color: black; text-decoration: none; font-weight: 500; font-size: 20px;"><button>Citas</button></a></li>
+                <li><a href="/users/usuario/" style="color: black; text-decoration: none; font-weight: 500; font-size: 20px;"><button>Inicio de sesión</button></a></li>
+				<li><a href="/contacto/" style="color: black; text-decoration: none; font-weight: 500; font-size: 20px;"><button>Contacto</button></a></li>
 			</ul>
 		</nav>
 	</div>
