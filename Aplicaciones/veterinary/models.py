@@ -21,10 +21,12 @@ class Cita(models.Model):
         
     ]
     
-    nombre_mascota = models.CharField(max_length=100, verbose_name='Nombre de la Mascota')
-    dueño_mascota = models.CharField(max_length=100, verbose_name='Dueño de la Mascota')
-    dueño_telefono = models.CharField(max_length=20, verbose_name='Teléfono del Dueño')
-    dueño_email = models.EmailField(verbose_name='Correo del Dueño')
+   
+
+    
+
+    cliente = models.ForeignKey('pets.Dueño', on_delete=models.PROTECT, null=True, blank=True)
+    mascota = models.ForeignKey('pets.Mascota', on_delete=models.SET_NULL, null=True, blank=True)
     tipo = models.CharField(max_length=50, choices=tipo_fields, default= 'Consulta', verbose_name='Tipo de Cita')
     fecha_cita = models.DateTimeField(verbose_name='Fecha de la Cita')
     hora_cita = models.TimeField(verbose_name='Hora de la Cita')

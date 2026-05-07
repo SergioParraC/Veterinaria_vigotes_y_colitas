@@ -1,0 +1,46 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+
+    <h1>{{ titulo }}</h1>
+    {% if messages %}
+        {% for message in messages %}
+            <div style="color: {% if message.tags == 'success' %}green{% else %}red{% endif %}; font-size: 20px; margin-bottom: 10px;">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <div style="margin-bottom: 10px;">
+        <a href="{% url 'users:pdf_usuarios' %}"><button style="background-color: rgb(20, 97, 5); color: white;">PDF</button></a>
+        <a href="{% url 'users:crear_usuario' %}"><button style="background-color: rgb(20, 97, 5); color: white;">Añadir</button></a>
+        <a href="{% url 'users:buscar_usuario' %}"><button style="background-color: rgb(20, 97, 5); color: white;">Filtrar</button></a>
+        <a href="{% url 'users:listado_perfiles' %}"><button style="background-color: rgb(20, 97, 5); color: white;">Ir a perfiles</button></a>
+    </div>
+    <div style="display: inline-block; margin-left: auto; margin-right: auto;">
+        <table>
+            <tr>
+                <th>Nombre</th>
+                <th>Apellido</th>
+                <th>Documento</th>
+                <th>Correo</th>
+                <th>Teléfono</th>
+                <th>Rol</th>
+                <th>Editar</th>
+            </tr>
+            {% for u in Usuarios %}
+            <tr>
+                <td>{{ u.nombre }}</td>
+                <td>{{ u.apellido }}</td>
+                <td>{{ u.get_tipo_documento_display }}: {{ u.numero_documento }}</td>
+                <td>{{ u.correo }}</td>
+                <td>{{ u.telefono }}</td>
+                <td>{{ u.rol.nombre|default:'Sin rol' }}</td>
+                <td><a href="{% url 'users:detalle_usuario' u.id %}"><button style="background-color: rgb(20, 97, 5); color: #fff;">Editar</button></a></td>
+            </tr>
+            {% endfor %}
+        </table>
+        <p style="font-size: 30px; text-align: left;"><strong>Cantidad total de usuarios: {{ Total }}</strong></p>
+    </div>
+
+{% endblock %}

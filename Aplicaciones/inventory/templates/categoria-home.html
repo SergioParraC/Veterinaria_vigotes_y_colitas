@@ -18,7 +18,7 @@
                 <tr>
                     <td>{{ cat.nombre }}</td>
                     <td>{{ cat.descripcion }}</td>
-                    <td><a href="{% url 'inventario:editar_categoria' cat.id %}"><button style="background-color: rgb(20, 97, 5); color: #fff;">Editar</button></a></td>
+                    <td><a href="{% url 'inventario:guardar_categoria' cat.id %}"><button style="background-color: rgb(20, 97, 5); color: #fff;">Editar</button></a></td>
                 </tr>
                 {% endfor %}
             </table>

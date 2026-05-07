@@ -1,0 +1,96 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+
+    <h1>{{ titulo }}</h1>
+    <a href="{% url 'users:listado_usuarios' %}"><button type="button" style="background-color: rgb(20, 97, 5); color: white; margin-bottom: 10px;">Volver a usuarios</button></a>
+
+    <div class="form-container">
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <label for="{{ form.nombre.id_for_label }}">Nombre:</label>
+            {{ form.nombre }}
+            {% if form.nombre.errors %}
+                <span class="error-text" style="display:block; color:red; font-size:14px;">{{ form.nombre.errors.0 }}</span>
+            {% elif form.nombre.help_text %}
+                <span class="help-text" style="display:block; color:#666; font-size:13px;">{{ form.nombre.help_text }}</span>
+            {% endif %}
+
+            <label for="{{ form.apellido.id_for_label }}">Apellido:</label>
+            {{ form.apellido }}
+            {% if form.apellido.errors %}
+                <span class="error-text" style="display:block; color:red; font-size:14px;">{{ form.apellido.errors.0 }}</span>
+            {% elif form.apellido.help_text %}
+                <span class="help-text" style="display:block; color:#666; font-size:13px;">{{ form.apellido.help_text }}</span>
+            {% endif %}
+
+            <label for="{{ form.tipo_documento.id_for_label }}">Tipo de documento:</label>
+            {{ form.tipo_documento }}
+            {% if form.tipo_documento.errors %}
+                <span class="error-text" style="display:block; color:red; font-size:14px;">{{ form.tipo_documento.errors.0 }}</span>
+            {% elif form.tipo_documento.help_text %}
+                <span class="help-text" style="display:block; color:#666; font-size:13px;">{{ form.tipo_documento.help_text }}</span>
+            {% endif %}
+
+            <label for="{{ form.numero_documento.id_for_label }}">Número de documento:</label>
+            {{ form.numero_documento }}
+            {% if form.numero_documento.errors %}
+                <span class="error-text" style="display:block; color:red; font-size:14px;">{{ form.numero_documento.errors.0 }}</span>
+            {% elif form.numero_documento.help_text %}
+                <span class="help-text" style="display:block; color:#666; font-size:13px;">{{ form.numero_documento.help_text }}</span>
+            {% endif %}
+
+            <label for="{{ form.correo.id_for_label }}">Correo electrónico:</label>
+            {{ form.correo }}
+            {% if form.correo.errors %}
+                <span class="error-text" style="display:block; color:red; font-size:14px;">{{ form.correo.errors.0 }}</span>
+            {% elif form.correo.help_text %}
+                <span class="help-text" style="display:block; color:#666; font-size:13px;">{{ form.correo.help_text }}</span>
+            {% endif %}
+
+            <label for="{{ form.telefono.id_for_label }}">Teléfono:</label>
+            {{ form.telefono }}
+            {% if form.telefono.errors %}
+                <span class="error-text" style="display:block; color:red; font-size:14px;">{{ form.telefono.errors.0 }}</span>
+            {% elif form.telefono.help_text %}
+                <span class="help-text" style="display:block; color:#666; font-size:13px;">{{ form.telefono.help_text }}</span>
+            {% endif %}
+
+            <label for="{{ form.direccion.id_for_label }}">Dirección:</label>
+            {{ form.direccion }}
+            {% if form.direccion.errors %}
+                <span class="error-text" style="display:block; color:red; font-size:14px;">{{ form.direccion.errors.0 }}</span>
+            {% elif form.direccion.help_text %}
+                <span class="help-text" style="display:block; color:#666; font-size:13px;">{{ form.direccion.help_text }}</span>
+            {% endif %}
+
+            <label for="{{ form.rol.id_for_label }}">Rol:</label>
+            {{ form.rol }}
+            {% if form.rol.errors %}
+                <span class="error-text" style="display:block; color:red; font-size:14px;">{{ form.rol.errors.0 }}</span>
+            {% elif form.rol.help_text %}
+                <span class="help-text" style="display:block; color:#666; font-size:13px;">{{ form.rol.help_text }}</span>
+            {% endif %}
+
+            <button type="submit" style="background-color: rgb(20, 97, 5); color: white;">{{ boton_text }}</button>
+        </form>
+
+        {% if usuario.id %}
+        <form method="POST" action="{% url 'users:eliminar_usuario' usuario.id %}" style="align-items: center;">
+            {% csrf_token %}
+            <button type="submit" style="background-color: rgb(20, 97, 5); color: white;">Eliminar usuario</button>
+        </form>
+        {% endif %}
+    </div>
+    <br>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div style="color: {% if message.tags == 'success' %}green{% else %}red{% endif %}; font-size: 20px; margin-bottom: 10px;">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+{% endblock %}

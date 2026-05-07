@@ -1,0 +1,25 @@
+{% extends "base/base.html" %}
+
+{% block content %}
+    <h1>Búsqueda de usuarios</h1>
+    <div class="form-container">
+        <a href="{% url 'users:listado_usuarios' %}"><button style="background-color: rgb(20, 97, 5); color: white">Volver a usuarios</button></a>
+        <form method="get" action="{% url 'users:filtrar_usuarios' %}">
+            <label for="nombre">Nombre o apellido:</label>
+            <input type="text" id="nombre" name="nombre" placeholder="Nombre del usuario">
+
+            <label for="documento">Número de documento:</label>
+            <input type="text" id="documento" name="documento" placeholder="Número de documento">
+
+            <label for="rol">Rol:</label>
+            <select id="rol" name="rol">
+                <option value="">Todos</option>
+                {% for rol in roles %}
+                    <option value="{{ rol.id }}">{{ rol.nombre }}</option>
+                {% endfor %}
+            </select>
+
+            <button type="submit" style="background-color: rgb(20, 97, 5); color: white">Buscar</button>
+        </form>
+    </div>
+{% endblock %}

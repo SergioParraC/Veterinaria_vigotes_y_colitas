@@ -5,15 +5,21 @@ app_name = "inventario"
 
 urlpatterns = [
     path('categoria/', views.home_categorias, name='listado_categorias'),
-    path('categoria/crear/', views.crear_categoria, name='crear_categoria'),
-    path('categoria/<int:id_categoria>/', views.editar_categoria, name='editar_categoria'),
+    path('categoria/crear/', views.crear_categoria_formulario, name='crear_categoria'),
+    path('categoria/<int:id_categoria>/', views.guardar_categoria, name='guardar_categoria'),
+
     path('proveedor/', views.home_proveedores, name='listado_proveedores'),
-    path('proveedor/crear/', views.crear_proveedor, name='crear_proveedor'),
-    path('proveedor/<int:id_proveedor>/', views.editar_proveedor, name='editar_proveedor'),
-    path('', views.home_producto, name='listado_productos'),
-    path('<int:id_producto>/', views.detalle_producto, name='detalle_producto'),
-    path('crear/', views.crear_producto, name='crear_producto'),
-    path('buscar/', views.buscar_producto, name='buscar_producto'),
+    path('proveedor/crear/', views.crear_proveedor_formulario, name='crear_proveedor'),
+    path('proveedor/<int:id_proveedor>/', views.guardar_proveedor, name='guardar_proveedor'),
+    path('proveedor/eliminar/<int:id_proveedor>/', views.eliminar_proveedor, name='eliminar_proveedor'),
+
+    path('listado-productos/', views.home_producto, name='listado_productos'),
+    path('', views.productos_cliente, name='productos_cliente'),
+    path('detalle/<int:id_producto>/', views.detalle_producto_cliente, name='detalle_producto_cliente'),
+    path('<int:id_producto>/', views.guardar_producto, name='guardar_producto'),
+    path('crear/', views.crear_producto_formulario, name='crear_producto_formulario'),
     path('filtrar/', views.filtrar_productos, name='filtrar_productos'),
-    path('eliminado/<int:id_producto>', views.eliminar_producto, name='eliminar_producto')
+    path('eliminado/<int:id_producto>', views.eliminar_producto, name='eliminar_producto'),
+    path('productos/pdf/', views.generar_pdf_productos, name='pdf_productos'),
+    path('proveedor/pdf/', views.generar_pdf_proveedores, name='pdf_proveedores'),
 ]

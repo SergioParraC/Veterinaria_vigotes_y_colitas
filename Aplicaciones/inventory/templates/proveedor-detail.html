@@ -3,33 +3,45 @@
 {% block content %}
 
     <h1>{{ titulo }}</h1>
-    <div class="form-container">
-        <a href="{% url 'inventario:listado_proveedores' %}"><button style="background-color: rgb(20, 97, 5); color: black; margin-bottom: 10px; color: white;">Volver a listado de proveedores</button></a>
-        <form method="POST">
-            {% csrf_token %}
-            <label for="nombre">Nombre:</label>
-            <input type="text" id="nombre" name="Nombre" placeholder="Nombre" value="{{ proveedor.nombre}}" required>
-            <label for="contacto">Contacto:</label>
-            <input type="text" id="contacto" name="Contacto" placeholder="Contacto" value="{{ proveedor.contacto }}" required>
-            <label for="telefono">Teléfono:</label>
-            <input type="text" id="telefono" name="Telefono" placeholder="Teléfono" value="{{ proveedor.telefono }}" required>
-            <label for="email">Correo electrónico:</label>
-            <input type="email" id="email" name="Email" placeholder="Correo electrónico" value="{{ proveedor.email }}" required>
-            <label for="direccion">Dirección:</label>
-            <textarea id="direccion" name="Direccion" placeholder="Dirección" required>{{ proveedor.direccion }}</textarea>
-            <button type="submit" style="background-color: rgb(20, 97, 5); color: #fff;">{{ boton_text }}</button>
-        </form>
-    </div>
-    <br>
     {% if mensaje %}
         <p style="color: green; font-size: 20px;">{{ mensaje }}</p>
     {% endif %}
-    {% if messages %}
-        {% for message in messages %}
-            <div style="color: {% if message.tags == 'success' %}green{% else %}red{% endif %}; font-size: 20px; margin-bottom: 10px;">
-            {{ message }}
-            </div>
-        {% endfor %}
+    <a href="{% url 'inventario:listado_proveedores' %}"><button style="margin-bottom: 10px;">Volver a listado de proveedores</button></a>
+    <div class="form-container">
+        {% if proveedor and proveedor.id %}
+            <form method="POST" action="{% url 'inventario:guardar_proveedor' proveedor.id %}">
+        {% else %}
+            <form method="POST" action="{% url 'inventario:crear_proveedor' %}">
+        {% endif %}
+            {% csrf_token %}
+            <label>{{ formulario.nombre.label }}:</label>
+            {{ formulario.nombre }}
+            <label>{{ formulario.contacto.label }}:</label>
+            {{ formulario.contacto }}
+            <label>{{ formulario.telefono.label }}:</label>
+            {{ formulario.telefono }}
+            <label>{{ formulario.email.label }}:</label>
+            {{ formulario.email }}
+            <label>{{ formulario.direccion.label }}:</label>
+            {{ formulario.direccion }}
+            <button type="submit">{{ boton_text }}</button>
+        </form>
+    
+    </div>
+    {% if proveedor and proveedor.id %}
+        <div class="form-delete"> 
+            <form method="post" action="{% url 'inventario:eliminar_proveedor' proveedor.id %}" onsubmit="return confirmarEliminacion();"> 
+                {% csrf_token %} 
+                <button type="submit" style="background-color:#b91c1c; color:white;">Eliminar proveedor</button> 
+            </form> 
+        </div>
+
+        <script>
+            function confirmarEliminacion() {
+                return confirm('¿Seguro que quieres eliminar el producto {{ producto.nombre }}?');
+            }
+        </script>
     {% endif %}
+    <br>
 
 {% endblock %}
