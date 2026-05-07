@@ -52,5 +52,5 @@ class Vacuna(models.Model):
     veterinario = models.CharField(max_length=100)
 
     def __str__(self):
-        return f'Vacuna {self.nombre} para {self.mascota.nombre} - Aplicada el {self.fecha_aplicacion} por {self.veterinario}'
+        return f'Vacuna {self.nombre_vacuna} para {self.mascota.nombre} - Aplicada el {self.fecha_aplicacion} por {self.veterinario}'
     

@@ -74,70 +74,60 @@
         }
 
         main {
-            max-width: 1100px;
+            max-width: 760px;
             margin: 0 auto;
             padding: 38px 24px;
         }
 
-        .hero {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 28px;
-            align-items: center;
-            text-align: left;
-        }
-
-        .hero-text h2 {
-            font-size: 42px;
-            margin: 0 0 16px;
-            color: #0f5f55;
-        }
-
-        .hero-text p {
-            font-size: 21px;
-            line-height: 1.5;
-            margin: 0 0 18px;
-        }
-
-        .hero-image img {
-            width: 100%;
-            max-height: 360px;
-            object-fit: cover;
-            border-radius: 12px;
-            box-shadow: 0 8px 22px rgba(15,95,85,0.18);
-        }
-
-        .section-title {
-            margin-top: 44px;
-            font-size: 30px;
-            color: #0f5f55;
-        }
-
-        .services {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 16px;
-            margin-top: 18px;
-        }
-
-        .service {
+        .contact {
             background: #ffffff;
             border: 1px solid #b8ded7;
             border-radius: 8px;
-            padding: 18px;
+            padding: 22px;
+            text-align: left;
             box-shadow: 0 4px 14px rgba(15,95,85,0.08);
         }
 
-        .service h3 {
-            margin: 0 0 8px;
-            font-size: 22px;
+        .contact h2 {
+            margin: 0 0 10px;
             color: #0f5f55;
+            font-size: 30px;
         }
 
-        .service p {
-            margin: 0;
+        .contact p {
             font-size: 18px;
             line-height: 1.4;
+        }
+
+        .contact form p {
+            margin: 0 0 14px;
+        }
+
+        .contact label {
+            display: block;
+            margin-bottom: 6px;
+            color: #0f5f55;
+            font-weight: bold;
+        }
+
+        .contact input,
+        .contact textarea {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 10px;
+            border: 1px solid #b8ded7;
+            border-radius: 7px;
+            font-family: Arial, sans-serif;
+            font-size: 17px;
+        }
+
+        .contact textarea {
+            resize: vertical;
+        }
+
+        .contact-message {
+            color: #0f5f55;
+            font-weight: bold;
         }
 
         footer {
@@ -150,19 +140,10 @@
         }
 
         @media (max-width: 800px) {
-            .header-content,
-            .hero {
-                grid-template-columns: 1fr;
+            .header-content {
                 flex-direction: column;
                 text-align: center;
-            }
-
-            .hero-text {
-                text-align: center;
-            }
-
-            .services {
-                grid-template-columns: 1fr;
+                gap: 12px;
             }
         }
     </style>
@@ -185,33 +166,19 @@
     </header>
 
     <main>
-        <section class="hero">
-            <div class="hero-text">
-                <h2>Cuidamos la salud de tus mascotas</h2>
-                <p>
-                    En Veterinaria Vida Animal ofrecemos atención cercana, responsable y pensada para el bienestar de perros, gatos y otros animales de compañía.
-                </p>
-                <a href="/inventario/"><button>Ver productos</button></a>
-            </div>
-            <div class="hero-image">
-                <img src="https://images.unsplash.com/photo-1601758228041-f3b2795255f1?auto=format&fit=crop&w=900&q=80" alt="Veterinaria atendiendo una mascota">
-            </div>
-        </section>
+        <section class="contact">
+            <h2>Contacto</h2>
+            <p>Déjanos tus datos y nos comunicaremos contigo.</p>
 
-        <h2 class="section-title">Nuestros servicios</h2>
-        <section class="services">
-            <article class="service">
-                <h3>Consulta general</h3>
-                <p>Revisión médica, orientación y seguimiento para mantener a tu mascota saludable.</p>
-            </article>
-            <article class="service">
-                <h3>Vacunación</h3>
-                <p>Aplicación y control de vacunas según la edad y necesidades de cada mascota.</p>
-            </article>
-            <article class="service">
-                <h3>Productos</h3>
-                <p>Catálogo de productos disponibles para el cuidado diario de tus animales.</p>
-            </article>
+            {% if mensaje_contacto %}
+                <p class="contact-message">{{ mensaje_contacto }}</p>
+            {% endif %}
+
+            <form method="post">
+                {% csrf_token %}
+                {{ formulario_contacto.as_p }}
+                <button type="submit">Enviar contacto</button>
+            </form>
         </section>
     </main>
 
