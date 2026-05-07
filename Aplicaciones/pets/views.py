@@ -19,7 +19,7 @@ def home_pets(request):
 
 def historia_mascota(request, id_mascota):
     mascota = models.Mascota.objects.get(pk=id_mascota)
-    citas = veterinary_models.Cita.objects.select_related('cliente', 'mascota').filter(
+    citas = veterinary_models.Cita.objects.filter(
         mascota=mascota,
     ).order_by('-fecha_cita', '-hora_cita')
     data = {

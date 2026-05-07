@@ -111,6 +111,12 @@
         border-radius: 4px;
         margin-top: 10px;
     }
+    .buy-btn {
+        background-color: #0f5f55;
+    }
+    .buy-btn:hover {
+        background-color: #0b4a42;
+    }
 </style>
 
 <div class="catalog-wrapper">
@@ -155,7 +161,7 @@
 							{% csrf_token %}
 							<div class="buy-form-row">
 								<input type="number" name="cantidad" min="1" max="{{ producto.stock }}" value="1" required class="buy-qty-input">
-								<button type="submit" style="background: blue;">Comprar</button>
+								<button type="submit" class="buy-btn">Comprar</button>
 							</div>
 						</form>
 					{% endif %}

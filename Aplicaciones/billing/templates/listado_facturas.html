@@ -21,7 +21,7 @@
                 <td>{{ fac.fecha }}</td>
                 <td>{{ fac.estado }}</td>
                 <td>${{ fac.total }}</td>
-                <td><a href="{% url 'billing:generar_pdf_factura' fac.id %}"><button type="button" style="background-color: blue;">PDF</button></a></td>
+                <td><a href="{% url 'billing:generar_pdf_factura' fac.id %}"><button type="button" style="background-color: #0f5f55;">PDF</button></a></td>
             </tr>
         </tbody>
     {% endfor %}
