@@ -1,0 +1,56 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+
+    <h1>{{ titulo }}</h1>
+    <a href="{% url 'users:listado_perfiles' %}"><button style="background-color: rgb(20, 97, 5); color: white; margin-bottom: 10px;">Volver a perfiles</button></a>
+    <div class="form-container">
+        <form method="POST">
+            {% csrf_token %}
+
+            <label for="{{ form.nombre.id_for_label }}">Nombre:</label>
+            {{ form.nombre }}
+            {% if form.nombre.errors %}
+                <span class="error-text" style="display:block; color:red; font-size:14px;">{{ form.nombre.errors.0 }}</span>
+            {% elif form.nombre.help_text %}
+                <span class="help-text" style="display:block; color:#666; font-size:13px;">{{ form.nombre.help_text }}</span>
+            {% endif %}
+
+            <label for="{{ form.email.id_for_label }}">Correo electrónico:</label>
+            {{ form.email }}
+            {% if form.email.errors %}
+                <span class="error-text" style="display:block; color:red; font-size:14px;">{{ form.email.errors.0 }}</span>
+            {% elif form.email.help_text %}
+                <span class="help-text" style="display:block; color:#666; font-size:13px;">{{ form.email.help_text }}</span>
+            {% endif %}
+
+            <label for="{{ form.telefono.id_for_label }}">Teléfono (opcional):</label>
+            {{ form.telefono }}
+            {% if form.telefono.errors %}
+                <span class="error-text" style="display:block; color:red; font-size:14px;">{{ form.telefono.errors.0 }}</span>
+            {% elif form.telefono.help_text %}
+                <span class="help-text" style="display:block; color:#666; font-size:13px;">{{ form.telefono.help_text }}</span>
+            {% endif %}
+
+            <label for="{{ form.direccion.id_for_label }}">Dirección (opcional):</label>
+            {{ form.direccion }}
+            {% if form.direccion.errors %}
+                <span class="error-text" style="display:block; color:red; font-size:14px;">{{ form.direccion.errors.0 }}</span>
+            {% elif form.direccion.help_text %}
+                <span class="help-text" style="display:block; color:#666; font-size:13px;">{{ form.direccion.help_text }}</span>
+            {% endif %}
+
+            <button type="submit" style="background-color: rgb(20, 97, 5); color: #fff;">{{ boton_text }}</button>
+        </form>
+    </div>
+    <br>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div style="color: {% if message.tags == 'success' %}green{% else %}red{% endif %}; font-size: 20px; margin-bottom: 10px;">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+{% endblock %}

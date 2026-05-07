@@ -1,9 +1,15 @@
 from django.shortcuts import render, redirect
 from . import models
 from django.contrib import messages
+from django.http import HttpResponse
+from datetime import datetime
+from io import BytesIO
+from xhtml2pdf import pisa
 from . import forms
 
+
 # Se dejan comentarios en productos, ya que es la base para el resto de elementos
+
 
 '''Listado de categorias'''
 def home_categorias(request):
@@ -356,3 +362,113 @@ def eliminar_producto(request, id_producto):
     except models.Producto.DoesNotExist:
         messages.error(request, 'El producto no existe o ya fue eliminado.')
     return redirect('inventario:listado_productos')
+
+
+def _generar_pdf(html_content, filename):
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename="{filename}"'
+    result_file = BytesIO()
+    pisa_status = pisa.CreatePDF(html_content, dest=result_file)
+    if pisa_status.err:
+        return HttpResponse('Error al generar el PDF', status=500)
+    response.write(result_file.getvalue())
+    return response
+
+
+def generar_pdf_productos(request):
+    productos = models.Producto.objects.all()
+    fecha = datetime.now().strftime('%d/%m/%Y %H:%M')
+    filas = ''
+    for p in productos:
+        stock_style = 'font-weight: bold; color: #d32f2f;' if p.stock <= 10 else ''
+        filas += f'''
+        <tr>
+            <td>{p.nombre}</td>
+            <td>{p.categoria}</td>
+            <td>{p.proveedor}</td>
+            <td>{p.descripcion or ''}</td>
+            <td>$ {p.precio}</td>
+            <td style="{stock_style}">{p.stock}</td>
+        </tr>'''
+    html = f'''
+    <html>
+    <head>
+        <meta charset="UTF-8">
+        <style>
+            body {{ font-family: Helvetica, sans-serif; font-size: 12px; }}
+            h1 {{ color: #146105; text-align: center; }}
+            .fecha {{ text-align: right; font-size: 10px; color: #666; margin-bottom: 10px; }}
+            table {{ width: 100%; border-collapse: collapse; margin-top: 10px; }}
+            th {{ background-color: #acffaf; color: #000; padding: 6px 8px; border: 1px solid #000; text-align: left; }}
+            td {{ padding: 5px 8px; border: 1px solid #000; }}
+            .total {{ margin-top: 10px; font-size: 14px; font-weight: bold; }}
+        </style>
+    </head>
+    <body>
+        <h1>Listado de Productos</h1>
+        <p class="fecha">Generado: {fecha}</p>
+        <table>
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Categoria</th>
+                    <th>Proveedor</th>
+                    <th>Descripcion</th>
+                    <th>Precio</th>
+                    <th>Stock</th>
+                </tr>
+            </thead>
+            <tbody>{filas}</tbody>
+        </table>
+        <p class="total">Total de productos: {productos.count()}</p>
+    </body>
+    </html>'''
+    return _generar_pdf(html, 'productos.pdf')
+
+
+def generar_pdf_proveedores(request):
+    proveedores = models.Proveedor.objects.all()
+    fecha = datetime.now().strftime('%d/%m/%Y %H:%M')
+    filas = ''
+    for p in proveedores:
+        filas += f'''
+        <tr>
+            <td>{p.nombre}</td>
+            <td>{p.contacto}</td>
+            <td>{p.telefono}</td>
+            <td>{p.email}</td>
+            <td>{p.direccion}</td>
+        </tr>'''
+    html = f'''
+    <html>
+    <head>
+        <meta charset="UTF-8">
+        <style>
+            body {{ font-family: Helvetica, sans-serif; font-size: 12px; }}
+            h1 {{ color: #146105; text-align: center; }}
+            .fecha {{ text-align: right; font-size: 10px; color: #666; margin-bottom: 10px; }}
+            table {{ width: 100%; border-collapse: collapse; margin-top: 10px; }}
+            th {{ background-color: #acffaf; color: #000; padding: 6px 8px; border: 1px solid #000; text-align: left; }}
+            td {{ padding: 5px 8px; border: 1px solid #000; }}
+            .total {{ margin-top: 10px; font-size: 14px; font-weight: bold; }}
+        </style>
+    </head>
+    <body>
+        <h1>Listado de Proveedores</h1>
+        <p class="fecha">Generado: {fecha}</p>
+        <table>
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Contacto</th>
+                    <th>Telefono</th>
+                    <th>Email</th>
+                    <th>Direccion</th>
+                </tr>
+            </thead>
+            <tbody>{filas}</tbody>
+        </table>
+        <p class="total">Total de proveedores: {proveedores.count()}</p>
+    </body>
+    </html>'''
+    return _generar_pdf(html, 'proveedores.pdf')

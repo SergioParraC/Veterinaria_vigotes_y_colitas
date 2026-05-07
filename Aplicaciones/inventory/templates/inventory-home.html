@@ -12,7 +12,7 @@
     {% endfor %}
 {% endif %}
 
-    {% include "filtro_productos.html" %}
+{% include "filtro_productos.html" %}
 
     <div style="margin: 10px;">
             <button>PDF</button>
@@ -21,6 +21,7 @@
             {% if volver_menu %}
                 <a href="{% url 'inventario:listado_productos' %}"><button style="background-color: #1AFF2D; color:black;">Volver al listado completo</button></a>
             {% endif %}
+
     </div>
     <div style="display: inline-block; margin-left: auto; margin-right: auto;">
         <table>
