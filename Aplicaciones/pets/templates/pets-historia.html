@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ titlePage }}</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f3fbf7;
+            color: #263238;
+            text-align: center;
+        }
+
+        header {
+            background: #0f5f55;
+            padding: 1rem 0;
+            box-shadow: 0 2px 14px rgba(15,95,85,0.18);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 34px;
+            color: #ffffff;
+        }
+
+        main {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 38px 24px;
+        }
+
+        .panel {
+            background: #ffffff;
+            border: 1px solid #b8ded7;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 18px;
+            text-align: left;
+            box-shadow: 0 4px 14px rgba(15,95,85,0.08);
+        }
+
+        .panel h2 {
+            margin: 0 0 12px;
+            color: #0f5f55;
+            font-size: 26px;
+        }
+
+        p {
+            font-size: 18px;
+            line-height: 1.4;
+            margin: 6px 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 12px;
+            background: #ffffff;
+        }
+
+        th, td {
+            border: 1px solid #b8ded7;
+            padding: 10px;
+            font-size: 17px;
+            text-align: left;
+        }
+
+        th {
+            background: #e8f6f2;
+            color: #0f5f55;
+        }
+
+        button {
+            padding: 8px 14px;
+            border-radius: 7px;
+            border: none;
+            background-color: #2f9e8f;
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(47,158,143,0.28);
+        }
+
+        button:hover {
+            background-color: #247f73;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        .empty {
+            color: #607d78;
+            font-size: 17px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <h1>{{ titulo }}</h1>
+            <a href="/pets/"><button type="button">Volver a mascotas</button></a>
+        </div>
+    </header>
+
+    <main>
+        <section class="panel">
+            <h2>Datos de la mascota</h2>
+            <p><strong>Nombre:</strong> {{ mascota.nombre }}</p>
+            <p><strong>Dueño:</strong> {{ mascota.dueño.nombre }}</p>
+            <p><strong>Especie:</strong> {{ mascota.especie }}</p>
+            <p><strong>Raza:</strong> {{ mascota.raza }}</p>
+            <p><strong>Edad:</strong> {{ mascota.edad }}</p>
+            <p><strong>Peso:</strong> {{ mascota.peso }}</p>
+            <p><strong>Vacunado:</strong>
+                {% if mascota.vacunado %}
+                    Sí
+                {% else %}
+                    No
+                {% endif %}
+            </p>
+            <a href="/pets/mascotas/{{ mascota.id }}/editar/"><button type="button">Editar datos</button></a>
+        </section>
+
+        <section class="panel">
+            <h2>Citas</h2>
+            {% if citas %}
+                <table>
+                    <tr>
+                        <th>Fecha</th>
+                        <th>Hora</th>
+                        <th>Tipo</th>
+                        <th>Síntomas</th>
+                        <th>Estado</th>
+                    </tr>
+                    {% for cita in citas %}
+                    <tr>
+                        <td>{{ cita.fecha_cita }}</td>
+                        <td>{{ cita.hora_cita }}</td>
+                        <td>{{ cita.tipo }}</td>
+                        <td>{{ cita.sintomas|default:"Sin síntomas registrados" }}</td>
+                        <td>{{ cita.estado }}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            {% else %}
+                <p class="empty">No hay citas registradas.</p>
+            {% endif %}
+        </section>
+
+        <section class="panel">
+            <h2>Vacunas</h2>
+            {% if vacunas %}
+                <table>
+                    <tr>
+                        <th>Vacuna</th>
+                        <th>Fecha</th>
+                        <th>Veterinario</th>
+                        <th>Acciones</th>
+                    </tr>
+                    {% for vacuna in vacunas %}
+                    <tr>
+                        <td>{{ vacuna.nombre_vacuna }}</td>
+                        <td>{{ vacuna.fecha_aplicacion }}</td>
+                        <td>{{ vacuna.veterinario }}</td>
+                        <td><a href="/pets/vacunas/{{ vacuna.id }}/editar/"><button type="button">Editar</button></a></td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            {% else %}
+                <p class="empty">No hay vacunas registradas.</p>
+            {% endif %}
+        </section>
+
+        <section class="panel">
+            <h2>Historial médico</h2>
+            {% if historiales %}
+                <table>
+                    <tr>
+                        <th>Fecha</th>
+                        <th>Motivo</th>
+                        <th>Diagnóstico</th>
+                        <th>Tratamiento</th>
+                        <th>Acciones</th>
+                    </tr>
+                    {% for historial in historiales %}
+                    <tr>
+                        <td>{{ historial.fecha_visita }}</td>
+                        <td>{{ historial.motivo_visita }}</td>
+                        <td>{{ historial.diagnostico }}</td>
+                        <td>{{ historial.tratamiento }}</td>
+                        <td><a href="/pets/historiales/{{ historial.id }}/editar/"><button type="button">Editar</button></a></td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            {% else %}
+                <p class="empty">No hay historial médico registrado.</p>
+            {% endif %}
+        </section>
+    </main>
+</body>
+</html>
