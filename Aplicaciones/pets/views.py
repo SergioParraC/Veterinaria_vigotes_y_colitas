@@ -20,8 +20,7 @@ def home_pets(request):
 def historia_mascota(request, id_mascota):
     mascota = models.Mascota.objects.get(pk=id_mascota)
     citas = veterinary_models.Cita.objects.filter(
-        nombre_mascota__iexact=mascota.nombre,
-        dueño_mascota__iexact=mascota.dueño.nombre,
+        mascota=mascota,
     ).order_by('-fecha_cita', '-hora_cita')
     data = {
         'titlePage': f'Historia de {mascota.nombre}',

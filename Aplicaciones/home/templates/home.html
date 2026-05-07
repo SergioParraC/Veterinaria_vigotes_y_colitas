@@ -25,6 +25,7 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
+            gap: 18px;
             padding: 0 24px;
         }
 
@@ -32,6 +33,7 @@
             display: flex;
             align-items: center;
             gap: 16px;
+            flex-shrink: 0;
         }
 
         .brand img {
@@ -49,9 +51,63 @@
 
         nav {
             display: flex;
-            gap: 12px;
+            gap: 8px;
             flex-wrap: wrap;
-            justify-content: center;
+            justify-content: flex-end;
+            max-width: 260px;
+        }
+
+        nav button {
+            width: 100%;
+            padding: 8px 10px;
+            font-size: 16px;
+        }
+
+        .menu-toggle {
+            display: none;
+        }
+
+        .menu-button {
+            display: inline-block;
+            padding: 8px 14px;
+            border-radius: 7px;
+            border: none;
+            background-color: #2f9e8f;
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(47,158,143,0.28);
+        }
+
+        .menu {
+            position: relative;
+        }
+
+        .menu-links {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 44px;
+            width: 220px;
+            background: #ffffff;
+            border: 1px solid #b8ded7;
+            border-radius: 8px;
+            padding: 10px;
+            box-shadow: 0 8px 22px rgba(15,95,85,0.18);
+            z-index: 10;
+        }
+
+        .menu-links a {
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .menu-links a:last-child {
+            margin-bottom: 0;
+        }
+
+        .menu-toggle:checked + .menu-button + .menu-links {
+            display: block;
         }
 
         a {
@@ -155,6 +211,18 @@
                 grid-template-columns: 1fr;
                 flex-direction: column;
                 text-align: center;
+                gap: 14px;
+            }
+
+            nav {
+                justify-content: center;
+                max-width: 100%;
+            }
+
+            .menu-links {
+                left: 50%;
+                right: auto;
+                transform: translateX(-50%);
             }
 
             .hero-text {
@@ -174,12 +242,18 @@
                 <img src="https://static.vecteezy.com/system/resources/thumbnails/006/470/430/small/modern-animal-pet-logo-template-free-vector.jpg" alt="Logo Veterinaria">
                 <h1>{{ titulo }}</h1>
             </div>
-            <nav>
-                <a href="/"><button>Inicio</button></a>
-                <a href="/pets/"><button>Mascotas</button></a>
-                <a href="/inventario/"><button>Productos</button></a>
-                <a href="/contacto/"><button>Contacto</button></a>
-                <a href="/login/"><button>Inicio de sesión</button></a>
+            <nav class="menu">
+                <input type="checkbox" id="menu-toggle" class="menu-toggle">
+                <label for="menu-toggle" class="menu-button">☰ Menú</label>
+                <div class="menu-links">
+                    <a href="/"><button>Inicio</button></a>
+                    <a href="/pets/"><button>Mascotas</button></a>
+                    <a href="/inventario/"><button>Inventario</button></a>
+                    <a href="/inventario/carrito/seleccionar-cliente/"><button>Facturación</button></a>
+                    <a href="/citas/"><button>Citas</button></a>
+                    <a href="/contacto/"><button>Contacto</button></a>
+                    <a href="/login/"><button>Inicio de sesión</button></a>
+                </div>
             </nav>
         </div>
     </header>
