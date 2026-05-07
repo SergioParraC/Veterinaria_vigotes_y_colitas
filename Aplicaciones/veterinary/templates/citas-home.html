@@ -18,7 +18,6 @@
     {% endif %}
 
     <div style="margin-bottom: 10px;">
-            <a href="{% url 'citas:pdf_citas' %}"><button style="background-color: rgb(20, 97, 5); color: white;">PDF</button></a>
             <a href="{% url 'citas:crear_cita' %}"><button style="background-color: rgb(20, 97, 5); color: white;">Añadir</button></a>
             <a href="{% url 'citas:buscar_cita' %}"><button style="background-color: rgb(20, 97, 5); color: white;">Filtrar</button></a>
     </div>
@@ -37,15 +36,15 @@
             </tr>
             {% for c in Citas %}
             <tr>
-                <td>{{c.nombre_mascota}}</td>
-                <td>{{c.dueño_mascota}}</td>
-                <td>{{c.dueño_telefono}}</td>
-                <td>{{c.dueño_email}}</td>
+                <td>{{ c.mascota.nombre }}</td>
+                <td>{{ c.cliente.nombre }}</td>
+                <td>{{ c.cliente.telefono }}</td>
+                <td>{{ c.cliente.email }}</td>
                 <td>{{c.get_tipo_display}}</td>
-                <td>{{c.fecha_cita|date:"d/m/Y"}}</td>
+                <td>{{c.fecha_cita}}</td>
                 <td>{{c.hora_cita|time:"H:i"}}</td>
                 <td>{{c.estado}}</td>
-                <td><a href="{% url 'citas:detalle_cita' c.id %}"><button style="background-color: rgb(20, 97, 5); color: #fff;">Editar</button></a></td>
+                <td><a href="{% url 'citas:detalle_cita' c.id %}"><button>Editar</button></a></td>
             </tr>
             {% endfor %}
         </table>

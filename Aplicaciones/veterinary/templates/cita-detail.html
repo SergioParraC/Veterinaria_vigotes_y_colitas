@@ -8,18 +8,25 @@
     <div class="form-container">
         <form method="POST">
             {% csrf_token %}
-            <label for="nombre">Nombre de la Mascota:</label>
-            <input type="text" id="nombre" name="NombreMascota" placeholder="Nombre de la Mascota" value="{{ cita.nombre_mascota|default:'' }}" required>
-            
-            <label for="dueño">Dueño de la Mascota:</label>
-            <input type="text" id="dueño" name="DueñoMascota" placeholder="Dueño de la Mascota" value="{{ cita.dueño_mascota|default:'' }}" required>
-            
-            <label for="telefono">Teléfono del Dueño:</label>
-            <input type="text" id="telefono" name="TeléfonoDueño" placeholder="Teléfono del Dueño" value="{{ cita.dueño_telefono|default:'' }}" required>
-            
-            <label for="email">Correo del Dueño:</label>
-            <input type="email" id="email" name="EmailDueño" placeholder="Correo del Dueño" value="{{ cita.dueño_email|default:'' }}" required>
-            
+            <label for="cliente">Selecciona el cliente:</label>
+            <select name="Cliente" required>
+                <option value="">Seleccione un cliente</option>
+                {% for cliente in clientes %}
+                    <option value="{{ cliente.id }}" {% if cita and cliente.id == cita.cliente_id %}selected{% endif %}>
+                        {{ cliente.nombre }}
+                    </option>
+                {% endfor %}
+            </select>
+
+            <label>Selecciona la mascota:</label>
+            <select name="Mascota" required>
+                <option value="">Seleccione una mascota</option>
+                {% for mascota in mascotas %}
+                    <option value="{{ mascota.id }}" {% if cita and mascota.id == cita.mascota_id %}selected{% endif %}>
+                        {{ mascota.nombre }} ({{ mascota.especie }})
+                    </option>
+                {% endfor %}
+            </select>
             <label for="tipo">Tipo de Cita:</label>
             <select id="tipo" name="Tipo" required>
                 <option value="">Seleccione un tipo</option>
@@ -68,7 +75,7 @@
 
     <script>
         function confirmarEliminacion() {
-            return confirm('¿Seguro que quieres eliminar la cita de {{ cita.nombre_mascota }}?');
+            return confirm('¿Seguro que quieres eliminar la cita de {{ cita.mascota.nombre|default:"esta mascota" }}?');
         }
     </script>
 
