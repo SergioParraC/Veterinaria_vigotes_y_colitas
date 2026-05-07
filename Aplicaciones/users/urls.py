@@ -16,7 +16,5 @@ urlpatterns = [
     path('cuenta/', views.home_cuentas, name='listado_cuentas'),
     path('cuenta/crear/', views.crear_cuenta, name='crear_cuenta'),
     path('cuenta/<int:id_cuenta>/', views.editar_cuenta, name='editar_cuenta'),
-    path('perfil/pdf/', views.generar_pdf_perfiles, name='pdf_perfiles'),
-    path('usuario/pdf/', views.generar_pdf_usuarios, name='pdf_usuarios'),
-    path('cuenta/pdf/', views.generar_pdf_cuentas, name='pdf_cuentas'),
+    path('factura/<int:id_factura>/pdf/', views.generar_pdf_factura, name='pdf_factura'),
 ]
