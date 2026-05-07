@@ -1,5 +1,6 @@
 from django.urls import path
 from . import views
+from Aplicaciones.users.views import generar_pdf_factura
 
 app_name = "citas"
 
@@ -10,5 +11,5 @@ urlpatterns = [
     path('buscar/', views.buscar_cita, name='buscar_cita'),
     path('filtrar/', views.filtrar_citas, name='filtrar_citas'),
     path('eliminado/<int:id_cita>', views.eliminar_cita, name='eliminar_cita'),
-    path('pdf/', views.generar_pdf_citas, name='pdf_citas'),
+    path('factura/<int:id_factura>/pdf/', generar_pdf_factura, name='pdf_factura'),
 ]
