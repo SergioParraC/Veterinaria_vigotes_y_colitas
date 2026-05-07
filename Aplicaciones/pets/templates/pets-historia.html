@@ -130,6 +130,7 @@
                     No
                 {% endif %}
             </p>
+            <a href="/pets/mascotas/{{ mascota.id }}/editar/"><button type="button">Editar datos</button></a>
         </section>
 
         <section class="panel">
@@ -138,15 +139,17 @@
                 <table>
                     <tr>
                         <th>Fecha</th>
-                        <th>Motivo</th>
-                        <th>Veterinario</th>
+                        <th>Hora</th>
+                        <th>Tipo</th>
+                        <th>Síntomas</th>
                         <th>Estado</th>
                     </tr>
                     {% for cita in citas %}
                     <tr>
-                        <td>{{ cita.fecha }}</td>
-                        <td>{{ cita.motivo }}</td>
-                        <td>{{ cita.veterinario }}</td>
+                        <td>{{ cita.fecha_cita }}</td>
+                        <td>{{ cita.hora_cita }}</td>
+                        <td>{{ cita.tipo }}</td>
+                        <td>{{ cita.sintomas|default:"Sin síntomas registrados" }}</td>
                         <td>{{ cita.estado }}</td>
                     </tr>
                     {% endfor %}
@@ -164,12 +167,14 @@
                         <th>Vacuna</th>
                         <th>Fecha</th>
                         <th>Veterinario</th>
+                        <th>Acciones</th>
                     </tr>
                     {% for vacuna in vacunas %}
                     <tr>
                         <td>{{ vacuna.nombre_vacuna }}</td>
                         <td>{{ vacuna.fecha_aplicacion }}</td>
                         <td>{{ vacuna.veterinario }}</td>
+                        <td><a href="/pets/vacunas/{{ vacuna.id }}/editar/"><button type="button">Editar</button></a></td>
                     </tr>
                     {% endfor %}
                 </table>
@@ -187,6 +192,7 @@
                         <th>Motivo</th>
                         <th>Diagnóstico</th>
                         <th>Tratamiento</th>
+                        <th>Acciones</th>
                     </tr>
                     {% for historial in historiales %}
                     <tr>
@@ -194,6 +200,7 @@
                         <td>{{ historial.motivo_visita }}</td>
                         <td>{{ historial.diagnostico }}</td>
                         <td>{{ historial.tratamiento }}</td>
+                        <td><a href="/pets/historiales/{{ historial.id }}/editar/"><button type="button">Editar</button></a></td>
                     </tr>
                     {% endfor %}
                 </table>

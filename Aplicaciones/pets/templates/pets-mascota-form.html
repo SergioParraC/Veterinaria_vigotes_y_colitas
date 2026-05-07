@@ -131,7 +131,7 @@
     <header>
         <div class="header-content">
             <h1>{{ titulo }}</h1>
-            <a href="/pets/"><button type="button">Volver a mascotas</button></a>
+            <a href="{{ url_cancelar }}"><button type="button">Volver</button></a>
         </div>
     </header>
 
@@ -151,7 +151,7 @@
 
             <div class="actions">
                 <button type="submit">{{ boton }}</button>
-                <a href="/pets/"><button type="button">Cancelar</button></a>
+                <a href="{{ url_cancelar }}"><button type="button">Cancelar</button></a>
             </div>
         </form>
     </main>
