@@ -72,11 +72,6 @@ def seleccionar_mascota(request):
     # Obtiene los datos guardados en la sesión
     cliente_id = request.session.get('cliente_id')
     id_producto = request.session.get('id_producto')
-    # Valida que exista un cliente y un producto seleccionado para evitar errores
-    if not cliente_id:
-        return redirect('billing:seleccionar_cliente')
-    if not id_producto:
-        return redirect('inventario:productos_cliente')
     # Trae el producto seleccionado para añadir al carrito
     producto = Producto.objects.get(id=id_producto)
     if request.method == 'POST':

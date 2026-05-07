@@ -10,6 +10,7 @@
     <div class="search-wrap">
     <form class="search-form" method="post" action="{% url 'inventario:filtrar_productos' %}">
         {% csrf_token %}
+        <input type="hidden" name="origen_filtro" value="{{ origen_filtro|default:'inventario' }}">
         <div class="f">
             <label>{{ formulario.nombre.label }}:</label>
             {{ formulario.nombre }}

@@ -11,7 +11,7 @@
         {% if categoria and categoria.id %}
             <form method="POST" action="{% url 'inventario:guardar_categoria' categoria.id %}">
         {% else %}
-            <form method="POST" action="{% url 'inventario:crear_categoria_formulario' %}">
+            <form method="POST" action="{% url 'inventario:crear_categoria' %}">
         {% endif %}
         {% csrf_token %}
 
