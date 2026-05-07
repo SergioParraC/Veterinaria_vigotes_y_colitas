@@ -1,0 +1,59 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+
+    <h1>{{ titulo }}</h1>
+    <a href="{% url 'users:listado_cuentas' %}"><button style="background-color: rgb(20, 97, 5); color: white; margin-bottom: 10px;">Volver a cuentas</button></a>
+    <div class="form-container">
+        <form method="POST">
+            {% csrf_token %}
+
+            <label for="{{ form.usuario.id_for_label }}">Usuario asociado:</label>
+            {{ form.usuario }}
+            {% if form.usuario.errors %}
+                <span class="error-text" style="display:block; color:red; font-size:14px;">{{ form.usuario.errors.0 }}</span>
+            {% elif form.usuario.help_text %}
+                <span class="help-text" style="display:block; color:#666; font-size:13px;">{{ form.usuario.help_text }}</span>
+            {% endif %}
+
+            <label for="{{ form.nombre_usuario.id_for_label }}">Nombre de usuario:</label>
+            {{ form.nombre_usuario }}
+            {% if form.nombre_usuario.errors %}
+                <span class="error-text" style="display:block; color:red; font-size:14px;">{{ form.nombre_usuario.errors.0 }}</span>
+            {% elif form.nombre_usuario.help_text %}
+                <span class="help-text" style="display:block; color:#666; font-size:13px;">{{ form.nombre_usuario.help_text }}</span>
+            {% endif %}
+
+            <label for="{{ form.contrasena.id_for_label }}">Contraseña:</label>
+            {{ form.contrasena }}
+            {% if form.contrasena.errors %}
+                <span class="error-text" style="display:block; color:red; font-size:14px;">{{ form.contrasena.errors.0 }}</span>
+            {% elif form.contrasena.help_text %}
+                <span class="help-text" style="display:block; color:#666; font-size:13px;">{{ form.contrasena.help_text }}</span>
+            {% endif %}
+
+            <label for="{{ form.estado.id_for_label }}">Estado:</label>
+            <label style="display: flex; align-items: center; gap: 8px; font-size: 20px;">
+                {{ form.estado }}
+                Activo
+            </label>
+            {% if form.estado.errors %}
+                <span class="error-text" style="display:block; color:red; font-size:14px;">{{ form.estado.errors.0 }}</span>
+            {% elif form.estado.help_text %}
+                <span class="help-text" style="display:block; color:#666; font-size:13px;">{{ form.estado.help_text }}</span>
+            {% endif %}
+
+            <button type="submit" style="background-color: rgb(20, 97, 5); color: #fff;">{{ boton_text }}</button>
+        </form>
+    </div>
+    <br>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div style="color: {% if message.tags == 'success' %}green{% else %}red{% endif %}; font-size: 20px; margin-bottom: 10px;">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+{% endblock %}

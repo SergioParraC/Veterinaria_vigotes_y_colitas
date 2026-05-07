@@ -1,5 +1,8 @@
 from django.shortcuts import render
-from django.http import HttpResponse
 
 def home(request):
-    return HttpResponse("")
+    data = {
+        'titlePage': 'Veterinaria Vida Animal',
+        'titulo': 'Veterinaria Vida Animal'
+    }
+    return render(request, 'home.html', data)

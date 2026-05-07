@@ -19,5 +19,7 @@ urlpatterns = [
     path('<int:id_producto>/', views.guardar_producto, name='guardar_producto'),
     path('crear/', views.crear_producto_formulario, name='crear_producto_formulario'),
     path('filtrar/', views.filtrar_productos, name='filtrar_productos'),
-    path('eliminado/<int:id_producto>', views.eliminar_producto, name='eliminar_producto')
+    path('eliminado/<int:id_producto>', views.eliminar_producto, name='eliminar_producto'),
+    path('productos/pdf/', views.generar_pdf_productos, name='pdf_productos'),
+    path('proveedor/pdf/', views.generar_pdf_proveedores, name='pdf_proveedores'),
 ]

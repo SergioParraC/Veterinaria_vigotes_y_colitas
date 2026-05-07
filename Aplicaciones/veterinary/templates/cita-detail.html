@@ -1,0 +1,75 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+
+    <h1>{{ titulo }}</h1>
+    <a href="{% url 'citas:listado_citas' %}"><button type="button" style="background-color: rgb(20, 97, 5); color: white; margin-bottom: 10px;">Volver a citas</button></a>
+    
+    <div class="form-container">
+        <form method="POST">
+            {% csrf_token %}
+            <label for="nombre">Nombre de la Mascota:</label>
+            <input type="text" id="nombre" name="NombreMascota" placeholder="Nombre de la Mascota" value="{{ cita.nombre_mascota|default:'' }}" required>
+            
+            <label for="dueño">Dueño de la Mascota:</label>
+            <input type="text" id="dueño" name="DueñoMascota" placeholder="Dueño de la Mascota" value="{{ cita.dueño_mascota|default:'' }}" required>
+            
+            <label for="telefono">Teléfono del Dueño:</label>
+            <input type="text" id="telefono" name="TeléfonoDueño" placeholder="Teléfono del Dueño" value="{{ cita.dueño_telefono|default:'' }}" required>
+            
+            <label for="email">Correo del Dueño:</label>
+            <input type="email" id="email" name="EmailDueño" placeholder="Correo del Dueño" value="{{ cita.dueño_email|default:'' }}" required>
+            
+            <label for="tipo">Tipo de Cita:</label>
+            <select id="tipo" name="Tipo" required>
+                <option value="">Seleccione un tipo</option>
+                <option value="Consulta" {% if cita.tipo == 'Consulta' %}selected{% endif %}>Consulta General</option>
+                <option value="Vacunación" {% if cita.tipo == 'Vacunación' %}selected{% endif %}>Vacunación</option>
+                <option value="Cirugía" {% if cita.tipo == 'Cirugía' %}selected{% endif %}>Cirugía</option>
+                <option value="Peluqueria" {% if cita.tipo == 'Peluqueria' %}selected{% endif %}>Peluqueria</option>
+                <option value="Control" {% if cita.tipo == 'Control' %}selected{% endif %}>Control</option>
+                <option value="Emergencia" {% if cita.tipo == 'Emergencia' %}selected{% endif %}>Emergencia</option>
+            </select>
+            
+            <label for="fecha">Fecha de la Cita:</label>
+            <input type="date" id="fecha" name="FechaCita" value="{{ cita.fecha_cita|date:'Y-m-d'|default:'' }}" required>
+            
+            <label for="hora">Hora de la Cita:</label>
+            <input type="time" id="hora" name="HoraCita" value="{{ cita.hora_cita|time:'H:i'|default:'' }}" required>
+            
+            <label for="estado">Estado:</label>
+            <select id="estado" name="Estado" required>
+                <option value="Pendiente" {% if cita.estado == 'Pendiente' %}selected{% endif %}>Pendiente</option>
+                <option value="Confirmada" {% if cita.estado == 'Confirmada' %}selected{% endif %}>Confirmada</option>
+                <option value="Completada" {% if cita.estado == 'Completada' %}selected{% endif %}>Completada</option>
+                <option value="Cancelada" {% if cita.estado == 'Cancelada' %}selected{% endif %}>Cancelada</option>
+            </select>
+            
+            <label for="sintomas">Síntomas:</label>
+            <textarea id="sintomas" name="Sintomas" placeholder="Síntomas de la Mascota">{{ cita.sintomas|default:'' }}</textarea>
+            
+            <label for="notas">Notas Adicionales:</label>
+            <textarea id="notas" name="Notas" placeholder="Notas Adicionales">{{ cita.notas|default:'' }}</textarea>
+            
+            <button type="submit" style="background-color: rgb(20, 97, 5); color: white;">{{ boton }}</button>
+        </form>
+        {% if cita.id %}
+        <form method="POST" action="{% url 'citas:eliminar_cita' cita.id %}" style="align-items: center;" onsubmit="return confirmarEliminacion();">
+            {% csrf_token %}
+            <button type="submit" style="background-color: rgb(20, 97, 5); color: white;">Eliminar cita</button>
+        </form>
+    {% endif %}
+    </div>
+    <br>
+    
+    {% if mensaje %}
+        <p style="color: green; font-size: 20px;">{{ mensaje }}</p>
+    {% endif %}
+
+    <script>
+        function confirmarEliminacion() {
+            return confirm('¿Seguro que quieres eliminar la cita de {{ cita.nombre_mascota }}?');
+        }
+    </script>
+
+{% endblock %}
